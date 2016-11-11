@@ -1,10 +1,9 @@
 #include "Nodo.h"
-#include <cstring>
-#include <time.h>
+
 
 Nodo::Nodo(){
   padre = NULL;
-  hijos = new std::vector<Nodo>();
+  hijos = new std::vector<Nodo*>();
   strncpy(nombre, "/", MAX);
   id = 0;
   nivel = 0;
@@ -15,7 +14,7 @@ Nodo::Nodo(){
 
 Nodo::Nodo(Nodo* mpadre, char* mnombre, int mid, bool directorio, off_t mtamano){
   padre = mpadre;
-  hijos = new std::vector<Nodo>();
+  hijos = new std::vector<Nodo*>();
   strncpy(nombre, mnombre, MAX);
   id = mid;
   nivel = mpadre->getId() + 1;
@@ -24,7 +23,7 @@ Nodo::Nodo(Nodo* mpadre, char* mnombre, int mid, bool directorio, off_t mtamano)
 }
 
 Nodo* Nodo::getPadre(){return padre;}
-std::vector<Nodo>* Nodo::getHijos(){return hijos;}
+std::vector<Nodo*>* Nodo::getHijos(){return hijos;}
 char* Nodo::getNombre(){return nombre;}
 int Nodo::getId(){return id;}
 int Nodo::getNivel(){return nivel;}
@@ -35,4 +34,4 @@ time_t Nodo::getUltimaModificacion(){return ultimaModificacion;}
 void Nodo::setNombre(char* mnombre){strncpy(nombre, mnombre, MAX);}
 void Nodo::setTamano(off_t mtamano){tamano = mtamano;}
 void Nodo::setUltimaModificacion(){ultimaModificacion = time(0);}
-void Nodo::setHijos(Nodo nuevoNodo){hijos->push_back(nuevoNodo);}
+void Nodo::setHijos(Nodo* nuevoNodo){hijos->push_back(nuevoNodo);}
