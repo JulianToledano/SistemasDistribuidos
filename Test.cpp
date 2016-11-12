@@ -10,32 +10,33 @@ int main(){
   test->insertarNodo("home", true);
   test->insertarNodo("var", true);
 
-
-
-  std::cout << " DIRECTORIO ACTUAL: ";
+  std::cout << "Introducimos subdirectorios:\n";
   test->setDirectorioActual("urs") ;
-  std::cout<<test->getDirectorioActual()->getNombre() << std::endl;
   test->insertarNodo("dentroURS", true);
-  test->imprimir(test->getRoot());
-
-  std::cout << "CAMBIANDO DIRECTORIO ACTUAL: ";
   test->setDirectorioActual("tmp");
-  std::cout<<test->getDirectorioActual()->getNombre() << std::endl;
-  test->insertarNodo("dentroTMP", true);
-  test->imprimir(test->getRoot());
+  test->insertarNodo("dentroTMP", false);
+  test->setDirectorioActual("home");
+  test->insertarNodo("dentroHOME", true);
+  test->setDirectorioActual("var");
+  test->insertarNodo("dentroVAR", true);
+  test->setDirectorioActual("dentroHOME");
+  test->insertarNodo("dentroDentroHOME", true);
+  test->imprimir(test->getRoot(), 0);
 
-  std::cout << "CAMBIANDO DIRECTORIO ACTUAL: ";
-  test->setDirectorioActual("dentroTMP");
-  std::cout<<test->getDirectorioActual()->getNombre() << std::endl;
-  test->insertarNodo("dentroDentroTMP", true);
-  test->imprimir(test->getRoot());
+  // Para eliminar debe de estar dentro de la carpeta actual
+  std::cout << "\n\nEliminamos directorios:\n";
+  test->setDirectorioActual("/");
+  test->eliminarNodo("bin");
+  test->setDirectorioActual("dentroHOME");
+  test->eliminarNodo("dentroDentroHOME");
+  test->imprimir(test->getRoot(), 0);
 
-  std::cout << "CAMBIANDO DIRECTORIO ACTUAL: ";
-  test->setDirectorioActual("bin");
-  std::cout<<test->getDirectorioActual()->getNombre() << std::endl;
-  test->insertarNodo("dentroBIN", true);
-  test->imprimir(test->getRoot());
-
+  // Modificar Nodo
+  std::cout << "\n\Modificando directorios:\n";
+  test->modificarNodo(test->buscarNodo("var"),"VAR");
+  test->modificarNodo(test->buscarNodo("dentroHOME"),NULL, 4789);
+  std::cout << "tamano dentroHOME: " << test->buscarNodo("dentroHOME")->getTamano() << std::endl;
+  test->imprimir(test->getRoot(), 0);
 
   std::cout << "TODO CORRECTO\n";
   delete test;
