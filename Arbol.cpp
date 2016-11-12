@@ -35,9 +35,24 @@ Nodo* Arbol::buscarNodo(Nodo *nodoABuscar, char* mnombre){
   return (NULL);
 }
 
+Nodo* Arbol::buscarNodo(Nodo *nodoABuscar, int mid){
+  if(nodoABuscar->getId() == mid)return nodoABuscar;
+  else{
+    for(int i = 0; i < nodoABuscar->getHijos()->size(); i++){
+      Nodo *resultado = buscarNodo(nodoABuscar->getHijos()->at(i), mid);
+      if(resultado != NULL)return resultado;
+    }
+  }
+  return (NULL);
+}
+
 Nodo* Arbol::buscarNodo(char* mnombre){
   if(!strcmp(mnombre, "/"))return raiz;
   buscarNodo(raiz, mnombre);
+}
+Nodo* Arbol::buscarNodo(int mid){
+  if(mid == 0)return raiz;
+  buscarNodo(raiz, mid);
 }
 
 void Arbol::modificarNodo(Nodo *aModificar, char* mnombre, off_t mtamano){
@@ -54,7 +69,7 @@ void Arbol::modificarNodo(Nodo *aModificar, char* mnombre, off_t mtamano){
 void Arbol::eliminarNodo(char* mnombre){
   // Tal vez sea mejor cambiarlo por el directorio actual.
   // De esta manera el comando rm afecta solo al directorio en el que nos encontramos
-  Nodo* buscado = buscarNodo(mnombre);
+  Nodo* buscado = buscarNodo(directorioActual, mnombre);
   if(buscado->getHijos()->size() > 0) std::cout << "Contiene subdirectorios o ficheros, no se puede eliminar.\n";
   else{
     for(int i = 0; i < buscado->getPadre()->getHijos()->size(); i++){
