@@ -11,12 +11,13 @@ Nodo::Nodo(){
   ultimaModificacion = time(0); // Utilizar la estructura st para convertir el número entero a formato fecha
 }
 
-Nodo::Nodo(Nodo* mpadre, char* mnombre, int mid, bool directorio, off_t mtamano){
+Nodo::Nodo(Nodo* mpadre, char* mnombre, int mid, bool mdirectorio, off_t mtamano){
   padre = mpadre;
   hijos = new std::vector<Nodo*>();
   strncpy(nombre, mnombre, MAX);
   id = mid;
   nivel = mpadre->getNivel() + 1;
+  directorio = mdirectorio;
   tamano  = mtamano;
   ultimaModificacion = time(0);
 }
