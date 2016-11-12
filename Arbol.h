@@ -13,7 +13,7 @@ public:
   void insertarNodo(char *mnombre, bool directorio);
   Nodo* buscarNodo(char* nombre);
   //void modificarNodo(char* mnombre);
-  //void eliminarNodo(char* mnombre);
+  void eliminarNodo(char* mnombre);
 
 
   Nodo* getRoot();
