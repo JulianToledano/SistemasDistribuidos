@@ -1,3 +1,9 @@
+#ifndef ARBOL_H_INDLUDED
+#define ARBOL_H_INDLUDED
+
+class Arbol;
+
+#include "Arbol.h"
 #include <sys/stat.h>
 #include <vector>
 #include <cstring>
@@ -6,7 +12,7 @@
 #define MAX 25
 
 class Nodo{
-  // Puntero al árbol al que pertecene
+  //Arbol* esteArbol;
   Nodo* padre;
   std::vector<Nodo*>* hijos;
   char nombre[MAX];
@@ -34,3 +40,4 @@ public:
   void setUltimaModificacion();
   void setHijos(Nodo *nuevoNodo);
 };
+#endif

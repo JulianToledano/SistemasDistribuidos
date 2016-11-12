@@ -1,4 +1,11 @@
+#ifndef NODO_H_INCLUDED
+#define NODO_H_INCLUDED
+
+class Nodo;
+
 #include "Nodo.h"
+#include <sys/stat.h>
+#include <cstring>
 
 class Arbol{
   Nodo* raiz;
@@ -24,3 +31,4 @@ public:
 
   void imprimir(Nodo* nodo, int tab);
 };
+#endif
