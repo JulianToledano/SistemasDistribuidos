@@ -15,17 +15,32 @@ void Arbol::insertarNodo(char* mnombre, bool directorio){
 }
 
 Nodo* Arbol::buscarNodo(Nodo *nodoABuscar, char* mnombre){
-  Nodo* buscado = NULL;
-  for(int i = 0; i < nodoABuscar->getHijos()->size(); i++){
-    if(!strcmp(nodoABuscar->getHijos()->at(i)->getNombre(), mnombre))
-      buscado =  nodoABuscar->getHijos()->at(i);
-    if(nodoABuscar->getHijos()->at(i)->getHijos()->size() > 0)
-        buscado = buscarNodo(nodoABuscar->getHijos()->at(i), mnombre);
+  if(!strcmp(nodoABuscar->getNombre(), mnombre))return nodoABuscar;
+  else{
+    for(int i = 0; i < nodoABuscar->getHijos()->size(); i++){
+      Nodo *resultado = buscarNodo(nodoABuscar->getHijos()->at(i), mnombre);
+      if(resultado != NULL)return resultado;
+    }
   }
-  return buscado;
+  return (NULL);
 }
+/*
+Nodo* Arbol::buscarNodo(Nodo *nodoABuscar, char* mnombre){
+  if(!strcmp(nodoABuscar->getNombre(), mnombre))return nodoABuscar;
+  else{
+    bool encontrado = false;
+    int i = 0;
+    while(!encontrado && i < nodoABuscar->getHijos()->size()){
+      buscarNodo(nodoABuscar->getHijos()->at(i), mnombre);
+      i++;
+    }
+  }
+  if(encontrado)return nodoABuscar;
+  return NULL;
+}*/
 
 Nodo* Arbol::buscarNodo(char* mnombre){
+  if(!strcmp(mnombre, "/"))return raiz;
   buscarNodo(raiz, mnombre);
 }
 
