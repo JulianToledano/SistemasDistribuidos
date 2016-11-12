@@ -10,9 +10,18 @@ Arbol::Arbol(){
 }
 // Se inserta en el directorio alctual. Se sobreentiende que antes existirá un
 // control para no poder entrar a ficheros.
-void Arbol::insertarNodo(char* mnombre, bool directorio){
+Nodo* Arbol::insertarNodo(char* mnombre, bool directorio){
+  // Comprobamos que no existe un hijo con ese mismo nombre
+  for(int i = 0; i < directorioActual->getHijos()->size(); i++)
+    if(!strcmp(directorioActual->getHijos()->at(i)->getNombre(), mnombre)){
+      std::cout << "Error. Ya existe con es nombre.\n";
+      return (NULL);
+    }
   Nodo *nuevoNodo = new Nodo(directorioActual, mnombre, ultimoID+1, directorio, 4096);
   directorioActual->setHijos(nuevoNodo);
+  totalNodos += 1;
+  ultimoID += 1;
+  return nuevoNodo;
 }
 
 Nodo* Arbol::buscarNodo(Nodo *nodoABuscar, char* mnombre){
@@ -51,6 +60,7 @@ void Arbol::eliminarNodo(char* mnombre){
     for(int i = 0; i < buscado->getPadre()->getHijos()->size(); i++){
       if(!strcmp(buscado->getPadre()->getHijos()->at(i)->getNombre(), mnombre))
         buscado->getPadre()->getHijos()->erase(buscado->getPadre()->getHijos()->begin()+i);
+        totalNodos -= 1;
     }
   }
 }
@@ -68,7 +78,7 @@ void Arbol::setDirectorioActual(char* mnombre){
 void Arbol::imprimir(Nodo* nodo, int tab){
   for(int i = 0; i < nodo->getHijos()->size(); i++){
     for(int j = 0; j < tab; j++)std::cout << "  ";
-    std::cout << nodo->getHijos()->at(i)->getNombre() << std::endl;
+    std::cout << nodo->getHijos()->at(i)->getNombre() << " ID: "<< nodo->getHijos()->at(i)->getId() << " Nivel: "<< nodo->getHijos()->at(i)->getNivel()<<std::endl;
     if(nodo->getHijos()->at(i)->getHijos()->size() > 0){
       std::cout << "  ";
       imprimir(nodo->getHijos()->at(i),tab+1);

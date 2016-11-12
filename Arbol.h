@@ -11,7 +11,7 @@ public:
   Arbol();
 
   // Operaciones con los nodos
-  void insertarNodo(char *mnombre, bool directorio);
+  Nodo* insertarNodo(char *mnombre, bool directorio);
   Nodo* buscarNodo(char* nombre);
   void modificarNodo(Nodo* aModificar, char* mnombre = NULL, off_t mtamano = -1);
   void eliminarNodo(char* mnombre);
