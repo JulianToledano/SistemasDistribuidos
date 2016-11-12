@@ -6,7 +6,7 @@ class Arbol{
   int totalNodos;
   int ultimoID;
   Nodo* buscarNodo(Nodo *nodoABuscar, char* mnombre);
-  
+
 public:
   Arbol();
 
@@ -20,4 +20,6 @@ public:
   Nodo* getRoot();
   Nodo* getDirectorioActual();
   void setDirectorioActual(char* mnombre);
+
+  void imprimir(Nodo* nodo);
 };
