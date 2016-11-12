@@ -13,7 +13,7 @@ public:
   // Operaciones con los nodos
   void insertarNodo(char *mnombre, bool directorio);
   Nodo* buscarNodo(char* nombre);
-  //void modificarNodo(char* mnombre);
+  void modificarNodo(Nodo* aModificar, char* mnombre = NULL, off_t mtamano = -1);
   void eliminarNodo(char* mnombre);
 
 
@@ -21,5 +21,5 @@ public:
   Nodo* getDirectorioActual();
   void setDirectorioActual(char* mnombre);
 
-  void imprimir(Nodo* nodo);
+  void imprimir(Nodo* nodo, int tab);
 };
