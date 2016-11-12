@@ -1,9 +1,8 @@
 #include "Arbol.h"
-#include <cstring>
 #include <iostream>
 
 Arbol::Arbol(){
-  raiz = new Nodo();
+  raiz = new Nodo(this);
   directorioActual = raiz;
   totalNodos = 0;
   ultimoID = 0;
@@ -17,7 +16,7 @@ Nodo* Arbol::insertarNodo(char* mnombre, bool directorio){
       std::cout << "Error. Ya existe con es nombre.\n";
       return (NULL);
     }
-  Nodo *nuevoNodo = new Nodo(directorioActual, mnombre, ultimoID+1, directorio, 4096);
+  Nodo *nuevoNodo = new Nodo(this, directorioActual, mnombre, ultimoID+1, directorio, 4096);
   directorioActual->setHijos(nuevoNodo);
   totalNodos += 1;
   ultimoID += 1;
@@ -67,7 +66,7 @@ void Arbol::modificarNodo(Nodo *aModificar, char* mnombre, off_t mtamano){
 }
 
 void Arbol::eliminarNodo(char* mnombre){
-  // Tal vez sea mejor cambiarlo por el directorio actual.
+  // Tal vez sea mejor cambiarlo por el directorio actual. HECHO
   // De esta manera el comando rm afecta solo al directorio en el que nos encontramos
   Nodo* buscado = buscarNodo(directorioActual, mnombre);
   if(buscado->getHijos()->size() > 0) std::cout << "Contiene subdirectorios o ficheros, no se puede eliminar.\n";

@@ -1,6 +1,7 @@
 #include "Nodo.h"
 
-Nodo::Nodo(){
+Nodo::Nodo(Arbol* arbol){
+  esteArbol = arbol;
   padre = NULL;
   hijos = new std::vector<Nodo*>();
   strncpy(nombre, "/", MAX);
@@ -11,7 +12,8 @@ Nodo::Nodo(){
   ultimaModificacion = time(0); // Utilizar la estructura st para convertir el número entero a formato fecha
 }
 
-Nodo::Nodo(Nodo* mpadre, char* mnombre, int mid, bool mdirectorio, off_t mtamano){
+Nodo::Nodo(Arbol *arbol, Nodo* mpadre, char* mnombre, int mid, bool mdirectorio, off_t mtamano){
+  esteArbol = arbol;
   padre = mpadre;
   hijos = new std::vector<Nodo*>();
   strncpy(nombre, mnombre, MAX);

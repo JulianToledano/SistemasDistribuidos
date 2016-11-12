@@ -1,5 +1,5 @@
-#ifndef NODO_H_INCLUDED
-#define NODO_H_INCLUDED
+#ifndef NODO_H
+#define NODO_H
 
 class Nodo;
 

@@ -1,5 +1,5 @@
-#ifndef ARBOL_H_INDLUDED
-#define ARBOL_H_INDLUDED
+#ifndef ARBOL_H
+#define ARBOL_H
 
 class Arbol;
 
@@ -12,7 +12,7 @@ class Arbol;
 #define MAX 25
 
 class Nodo{
-  //Arbol* esteArbol;
+  Arbol* esteArbol;
   Nodo* padre;
   std::vector<Nodo*>* hijos;
   char nombre[MAX];
@@ -23,8 +23,8 @@ class Nodo{
   time_t ultimaModificacion;
 public:
   // Constructores
-  Nodo();
-  Nodo(Nodo *mpadre, char *mnombre, int mid, bool mdirectorio, off_t mtamano);
+  Nodo(Arbol* arbol);
+  Nodo(Arbol* arbol, Nodo *mpadre, char *mnombre, int mid, bool mdirectorio, off_t mtamano);
   // Métodos get
   Nodo* getPadre();
   std::vector<Nodo*>* getHijos();
