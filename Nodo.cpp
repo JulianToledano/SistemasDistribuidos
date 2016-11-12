@@ -1,6 +1,5 @@
 #include "Nodo.h"
 
-
 Nodo::Nodo(){
   padre = NULL;
   hijos = new std::vector<Nodo*>();
@@ -17,7 +16,7 @@ Nodo::Nodo(Nodo* mpadre, char* mnombre, int mid, bool directorio, off_t mtamano)
   hijos = new std::vector<Nodo*>();
   strncpy(nombre, mnombre, MAX);
   id = mid;
-  nivel = mpadre->getId() + 1;
+  nivel = mpadre->getNivel() + 1;
   tamano  = mtamano;
   ultimaModificacion = time(0);
 }
