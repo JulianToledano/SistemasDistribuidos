@@ -1,6 +1,7 @@
 #include "Arbol.h"
 #include <cstring>
 #include <iostream>
+
 Arbol::Arbol(){
   raiz = new Nodo();
   directorioActual = raiz;
@@ -13,16 +14,20 @@ void Arbol::insertarNodo(char* mnombre, bool directorio){
   directorioActual->setHijos(nuevoNodo);
 }
 
-Nodo* Arbol::buscarNodo(char* mnombre){
-  for(int i = 0; i < raiz->getHijos()->size(); i++){
-    if(!strcmp(raiz->getHijos()->at(i)->getNombre(), mnombre)){
-      return raiz->getHijos()->at(i);
+Nodo* Arbol::buscarNodo(Nodo *nodoABuscar, char* mnombre){
+  for(int i = 0; i < nodoABuscar->getHijos()->size(); i++){
+    if(!strcmp(nodoABuscar->getHijos()->at(i)->getNombre(), mnombre)){
+      std::cout << "Encontrado\n";
+      return nodoABuscar->getHijos()->at(i);
     }
-    if(raiz->getHijos()->at(i)->getHijos()->size() > 0){}
-    //  buscarNodo(mnombre,raiz->getHijos()->at(i).getHijos());
+    if(nodoABuscar->getHijos()->at(i)->getHijos()->size() > 0){}
+       buscarNodo(nodoABuscar->getHijos()->at(i), mnombre);
   }
-  std::cout << "Error al buscar";
   return NULL;
+}
+
+Nodo* Arbol::buscarNodo(char* mnombre){
+  buscarNodo(raiz, mnombre);
 }
 
 void Arbol::eliminarNodo(char* mnombre){
@@ -37,6 +42,5 @@ void Arbol::eliminarNodo(char* mnombre){
 Nodo* Arbol::getRoot(){return raiz;}
 Nodo* Arbol::getDirectorioActual(){return directorioActual;}
 void Arbol::setDirectorioActual(char* mnombre){
-
-
+  directorioActual = buscarNodo(mnombre);
 }

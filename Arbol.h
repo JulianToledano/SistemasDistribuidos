@@ -5,7 +5,8 @@ class Arbol{
   Nodo* directorioActual;
   int totalNodos;
   int ultimoID;
-  //Nodo* buscarnodo(char* mnombre, std::vector<Nodo>* mhijos);
+  Nodo* buscarNodo(Nodo *nodoABuscar, char* mnombre);
+  
 public:
   Arbol();
 
