@@ -29,6 +29,9 @@ public:
   Nodo* getDirectorioActual();
   void setDirectorioActual(char* mnombre);
 
+  // Usado únicamente en los tests
   void imprimir(Nodo* nodo, int tab);
+
+  ~Arbol();
 };
 #endif

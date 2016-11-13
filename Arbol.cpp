@@ -99,3 +99,7 @@ void Arbol::imprimir(Nodo* nodo, int tab){
     }
   }
 }
+
+Arbol::~Arbol(){
+  delete raiz;
+}
