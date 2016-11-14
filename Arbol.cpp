@@ -47,7 +47,7 @@ Nodo* Arbol::buscarNodo(Nodo *nodoABuscar, int mid){
 
 Nodo* Arbol::buscarNodo(char* mnombre){
   if(!strcmp(mnombre, "/"))return raiz;
-  buscarNodo(raiz, mnombre);
+  return buscarNodo(raiz, mnombre);
 }
 Nodo* Arbol::buscarNodo(int mid){
   if(mid == 0)return raiz;
@@ -81,12 +81,19 @@ void Arbol::eliminarNodo(char* mnombre){
 
 Nodo* Arbol::getRoot(){return raiz;}
 Nodo* Arbol::getDirectorioActual(){return directorioActual;}
+
 void Arbol::setDirectorioActual(char* mnombre){
+  // Nos aseguramos de que el directorio existe
+  if(buscarNodo(directorioActual, mnombre) == NULL){}
   // Nos aseguramos de que el directorio es realmente un directorio
-  if(buscarNodo(mnombre)->esDirectorio())
+  else if(buscarNodo(directorioActual, mnombre)->esDirectorio())
     directorioActual = buscarNodo(mnombre);
   else
     std::cout << "Error. Intenta entrar en un archivo, no un directorio.\n";
+}
+
+void Arbol::setDirectorioActual(Nodo* nodo){
+  directorioActual = nodo;
 }
 
 void Arbol::imprimir(Nodo* nodo, int tab){

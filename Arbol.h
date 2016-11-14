@@ -28,7 +28,7 @@ public:
   Nodo* getRoot();
   Nodo* getDirectorioActual();
   void setDirectorioActual(char* mnombre);
-
+  void setDirectorioActual(Nodo* nodo);
   // Usado únicamente en los tests
   void imprimir(Nodo* nodo, int tab);
 
