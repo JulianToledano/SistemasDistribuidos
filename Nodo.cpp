@@ -4,7 +4,7 @@ Nodo::Nodo(Arbol* arbol){
   esteArbol = arbol;
   padre = NULL;
   hijos = new std::vector<Nodo*>();
-  strncpy(nombre, "/", MAX);
+  strncpy(nombre, "/root", MAX);
   id = 0;
   nivel = 0;
   directorio = true;

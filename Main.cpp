@@ -1,5 +1,5 @@
-
 #include "Arbol.h"
+#include "Comandos.h"
 #include <iostream>
 #include <unistd.h>
 #include <map>
@@ -49,16 +49,20 @@ int main(){
     try{
       switch (com.at(argumentos[0])){
         case ls:
+          list(directorioRemoto);
           break;
         case pwd:
+          printWD(directorioRemoto);
           break;
         case cd:
+          changeDirectori(directorioRemoto, argumentos[1]);
           break;
         case mv:
           break;
         case cp:
           break;
         case Mkdir:
+          makeDir(directorioRemoto, argumentos[1]);
           break;
         case rm:
             break;
