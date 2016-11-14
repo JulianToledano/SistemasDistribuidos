@@ -12,7 +12,7 @@
 // sistema de ficheros.
 enum comandos{Exit, ls,
               pwd,  cd,
-              mv,   cp,
+              Mv,   cp,
               Mkdir,rm,
               Rmdir};
 
@@ -41,32 +41,36 @@ int main(){
     std::cout << "getcwd(). Error.";
 
   do{
-    std::cout << directorioRemoto->getDirectorioActual()->getNombre() << "> ";
+    printWD(directorioRemoto, false); std::cout << "> ";
 
     getline(std::cin, comando);
     std::vector<std::string> argumentos = dividirArgumentos(comando);// = dividirArgumentos(comando);
 
     try{
       switch (com.at(argumentos[0])){
-        case ls:
+        case ls://if(argumentos.size() > 1)break;
           list(directorioRemoto);
           break;
         case pwd:
-          printWD(directorioRemoto);
+          printWD(directorioRemoto, true);
           break;
         case cd:
           changeDirectori(directorioRemoto, argumentos[1]);
           break;
-        case mv:
+        case Mv:
+          mv(directorioRemoto,argumentos[1], argumentos[2]);
           break;
         case cp:
+          copy(directorioRemoto, argumentos[1], argumentos[2]);
           break;
         case Mkdir:
           makeDir(directorioRemoto, argumentos[1]);
           break;
         case rm:
+            removeFich(directorioRemoto, argumentos[1]);
             break;
         case Rmdir:
+            removeDir(directorioRemoto, argumentos[1]);
             break;
         case Exit:
             std::cout << "Adiós\n";
@@ -96,7 +100,7 @@ void inicializarComandos(std::map<std::string, comandos>&com){
   com.insert(std::pair<std::string, comandos>("ls", ls));
   com.insert(std::pair<std::string, comandos>("pwd", pwd));
   com.insert(std::pair<std::string, comandos>("cd", cd));
-  com.insert(std::pair<std::string, comandos>("mv", mv));
+  com.insert(std::pair<std::string, comandos>("mv", Mv));
   com.insert(std::pair<std::string, comandos>("cp", cp));
   com.insert(std::pair<std::string, comandos>("mkdir", Mkdir));
   com.insert(std::pair<std::string, comandos>("rm", rm));

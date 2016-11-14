@@ -12,8 +12,6 @@ class Arbol{
   Nodo* directorioActual;
   int totalNodos;
   int ultimoID;
-  Nodo* buscarNodo(Nodo *nodoABuscar, char* mnombre);
-  Nodo* buscarNodo(Nodo *nodoABuscar, int mid);
 public:
   Arbol();
 
@@ -21,6 +19,8 @@ public:
   Nodo* insertarNodo(char *mnombre, bool directorio);
   Nodo* buscarNodo(char* nombre);
   Nodo* buscarNodo(int mid);
+  Nodo* buscarNodo(Nodo *nodoABuscar, char* mnombre);
+  Nodo* buscarNodo(Nodo *nodoABuscar, int mid);
   void modificarNodo(Nodo* aModificar, char* mnombre = NULL, off_t mtamano = -1);
   void eliminarNodo(char* mnombre);
 

@@ -23,7 +23,10 @@ Nodo* Arbol::insertarNodo(char* mnombre, bool directorio){
   return nuevoNodo;
 }
 
+// Causa problemas cuando se busca un nodo que tiene el mismo nombre que el padre,
+// que es el directorio actual.
 Nodo* Arbol::buscarNodo(Nodo *nodoABuscar, char* mnombre){
+
   if(!strcmp(nodoABuscar->getNombre(), mnombre))return nodoABuscar;
   else{
     for(int i = 0; i < nodoABuscar->getHijos()->size(); i++){
@@ -66,16 +69,15 @@ void Arbol::modificarNodo(Nodo *aModificar, char* mnombre, off_t mtamano){
 }
 
 void Arbol::eliminarNodo(char* mnombre){
-  // Tal vez sea mejor cambiarlo por el directorio actual. HECHO
-  // De esta manera el comando rm afecta solo al directorio en el que nos encontramos
   Nodo* buscado = buscarNodo(directorioActual, mnombre);
-  if(buscado->getHijos()->size() > 0) std::cout << "Contiene subdirectorios o ficheros, no se puede eliminar.\n";
-  else{
+  //if(buscado->getHijos()->size() > 0) std::cout << "Contiene subdirectorios o ficheros, no se puede eliminar.\n";
+//  else{
     for(int i = 0; i < buscado->getPadre()->getHijos()->size(); i++){
-      if(!strcmp(buscado->getPadre()->getHijos()->at(i)->getNombre(), mnombre))
+      if(!strcmp(buscado->getPadre()->getHijos()->at(i)->getNombre(), mnombre)){
         buscado->getPadre()->getHijos()->erase(buscado->getPadre()->getHijos()->begin()+i);
         totalNodos -= 1;
-    }
+      }
+    //}
   }
 }
 
@@ -87,7 +89,7 @@ void Arbol::setDirectorioActual(char* mnombre){
   if(buscarNodo(directorioActual, mnombre) == NULL){}
   // Nos aseguramos de que el directorio es realmente un directorio
   else if(buscarNodo(directorioActual, mnombre)->esDirectorio())
-    directorioActual = buscarNodo(mnombre);
+    directorioActual = buscarNodo(directorioActual, mnombre);
   else
     std::cout << "Error. Intenta entrar en un archivo, no un directorio.\n";
 }
