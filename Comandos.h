@@ -15,6 +15,7 @@ void list(Arbol* arbol){
   std::cout << arbol->getDirectorioActual()->getHijos()->size() << " elementos en directorio remoto '" << arbol->getDirectorioActual()->getNombre() << "' ocupando un total de " << " bytes\n";
 }
 
+// Imprime del revés
 void printWD(Arbol* arbol){
   std::vector<std::string> pwd;
   Nodo* actual = arbol->getDirectorioActual();
@@ -26,7 +27,7 @@ void printWD(Arbol* arbol){
 }
 
 void changeDirectori(Arbol* arbol, std::string directorio){
-  if(directorio == "/")arbol->setDirectorioActual("/root");
+  if(directorio == "/")arbol->setDirectorioActual(arbol->getRoot());
   else if(directorio == ".." && strcmp(arbol->getDirectorioActual()->getNombre(), "/root"))
     arbol->setDirectorioActual(arbol->getDirectorioActual()->getPadre());
   else{
