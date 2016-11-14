@@ -1,7 +1,8 @@
 #include "Arbol.h"
-#include "Comandos.h"
+#include "ComandosRemoto.h"
+#include "ComandosLocal.h"
 #include <iostream>
-#include <unistd.h>
+//#include <unistd.h>
 #include <map>
 #include <string>
 #include<sstream>
@@ -14,7 +15,9 @@ enum comandos{Exit, ls,
               pwd,  cd,
               Mv,   cp,
               Mkdir,rm,
-              Rmdir};
+              Rmdir,lls,
+              lpwd, lcd,
+              lupload};
 
 // Divide el string insertado por teclado y lo introduce
 // en un vector para poder operar a través de un switch.
@@ -49,28 +52,37 @@ int main(){
     try{
       switch (com.at(argumentos[0])){
         case ls://if(argumentos.size() > 1)break;
-          list(directorioRemoto);
-          break;
+            list(directorioRemoto);
+            break;
         case pwd:
-          printWD(directorioRemoto, true);
-          break;
+            printWD(directorioRemoto, true);
+            break;
         case cd:
-          changeDirectori(directorioRemoto, argumentos[1]);
-          break;
+            changeDirectori(directorioRemoto, argumentos[1]);
+            break;
         case Mv:
-          mv(directorioRemoto,argumentos[1], argumentos[2]);
-          break;
+            mv(directorioRemoto,argumentos[1], argumentos[2]);
+            break;
         case cp:
-          copy(directorioRemoto, argumentos[1], argumentos[2]);
-          break;
+            copy(directorioRemoto, argumentos[1], argumentos[2]);
+            break;
         case Mkdir:
-          makeDir(directorioRemoto, argumentos[1]);
-          break;
+            makeDir(directorioRemoto, argumentos[1]);
+            break;
         case rm:
             removeFich(directorioRemoto, argumentos[1]);
             break;
         case Rmdir:
             removeDir(directorioRemoto, argumentos[1]);
+            break;
+        case lls:
+            localls();
+            break;
+        case lpwd:
+            localpwd();
+            break;
+        case lcd:
+            localcd(argumentos[1]);
             break;
         case Exit:
             std::cout << "Adiós\n";
@@ -105,4 +117,8 @@ void inicializarComandos(std::map<std::string, comandos>&com){
   com.insert(std::pair<std::string, comandos>("mkdir", Mkdir));
   com.insert(std::pair<std::string, comandos>("rm", rm));
   com.insert(std::pair<std::string, comandos>("rmdir", Rmdir));
+  com.insert(std::pair<std::string, comandos>("lls", lls));
+  com.insert(std::pair<std::string, comandos>("lpwd", lpwd));
+  com.insert(std::pair<std::string, comandos>("lcd", lcd));
+  com.insert(std::pair<std::string, comandos>("lupload", lupload));
 }
