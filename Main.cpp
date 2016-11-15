@@ -17,7 +17,7 @@ enum comandos{Exit, ls,
               Mkdir,rm,
               Rmdir,lls,
               lpwd, lcd,
-              lupload};
+              Lupload};
 
 // Divide el string insertado por teclado y lo introduce
 // en un vector para poder operar a través de un switch.
@@ -84,6 +84,9 @@ int main(){
         case lcd:
             localcd(argumentos[1]);
             break;
+        case Lupload:
+          lupload(directorioRemoto, argumentos[1]);
+          break;
         case Exit:
             std::cout << "Adiós\n";
       }
@@ -120,5 +123,5 @@ void inicializarComandos(std::map<std::string, comandos>&com){
   com.insert(std::pair<std::string, comandos>("lls", lls));
   com.insert(std::pair<std::string, comandos>("lpwd", lpwd));
   com.insert(std::pair<std::string, comandos>("lcd", lcd));
-  com.insert(std::pair<std::string, comandos>("lupload", lupload));
+  com.insert(std::pair<std::string, comandos>("lupload", Lupload));
 }

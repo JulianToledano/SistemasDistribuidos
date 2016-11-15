@@ -62,7 +62,7 @@ void changeDirectori(Arbol* arbol, std::string directorio){
 void makeDir(Arbol *arbol, std::string directorio){
   char* dir = new char(directorio.size() + 1);
   memcpy(dir, directorio.c_str(), directorio.size() + 1);
-  arbol->insertarNodo(dir, true);
+  arbol->insertarNodo(dir, true, 4096);
   delete dir;
 }
 

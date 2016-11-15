@@ -9,14 +9,14 @@ Arbol::Arbol(){
 }
 // Se inserta en el directorio alctual. Se sobreentiende que antes existirá un
 // control para no poder entrar a ficheros.
-Nodo* Arbol::insertarNodo(char* mnombre, bool directorio){
+Nodo* Arbol::insertarNodo(char* mnombre, bool directorio, off_t mtamano){
   // Comprobamos que no existe un hijo con ese mismo nombre
   for(int i = 0; i < directorioActual->getHijos()->size(); i++)
     if(!strcmp(directorioActual->getHijos()->at(i)->getNombre(), mnombre)){
       std::cout << "Error. Ya existe con es nombre.\n";
       return (NULL);
     }
-  Nodo *nuevoNodo = new Nodo(this, directorioActual, mnombre, ultimoID+1, directorio, 4096);
+  Nodo *nuevoNodo = new Nodo(this, directorioActual, mnombre, ultimoID+1, directorio, mtamanoupl);
   directorioActual->setHijos(nuevoNodo);
   totalNodos += 1;
   ultimoID += 1;
