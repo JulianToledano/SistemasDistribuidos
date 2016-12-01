@@ -3,6 +3,7 @@
 #include <cstring>
 #include <iostream>
 
+// Comando ls
 void list(Arbol* arbol){
   for(int i = 0; i < arbol->getDirectorioActual()->getHijos()->size(); i++){
     if( arbol->getDirectorioActual()->getHijos()->at(i)->esDirectorio())
@@ -15,19 +16,25 @@ void list(Arbol* arbol){
   std::cout << arbol->getDirectorioActual()->getHijos()->size() << " elementos en directorio remoto '" << arbol->getDirectorioActual()->getNombre() << "' ocupando un total de " << " bytes\n";
 }
 
+// Imprime el directorio actual de trabajo.
+// saltoLinea es
 void printWD(Arbol* arbol, bool saltoLinea){
   std::vector<std::string> pwd;
   Nodo* actual = arbol->getDirectorioActual();
+  // Mientras el nombre del nodo sea distinto de root,
+  // introducimos todos los nombres de directorios hasta llegar a este
   while(strcmp(actual->getNombre(), "/root")){
     pwd.push_back(actual->getNombre());
     actual = actual->getPadre();
   };
   std::cout << "/root";
+  // Recorremos el vector con los nombres de todos los directorios
   for(int i = pwd.size() - 1; i >= 0; i--)
     std::cout << "/" << pwd[i];
   if(saltoLinea)std::cout << "\n";
 }
 
+// Comando cd
 void changeDirectori(Arbol* arbol, std::string directorio){
   // Si se quiere acceder a la raiz
   if(directorio == "/"){
@@ -43,22 +50,28 @@ void changeDirectori(Arbol* arbol, std::string directorio){
   memcpy(dir, directorio.c_str(), directorio.size() + 1);
   // Si al directorio que se quiere acceder tiene el mismo nombre que el actual '/root/test --> /root/test/test'
   if(!strcmp(arbol->getDirectorioActual()->getNombre(), dir)){
+    // Recorremos el vector de hijos
     for(int i = 0; i < arbol->getDirectorioActual()->getHijos()->size(); i++)
+      // Si encontramos el nodo con el mismo nombre que el padre realizamos el cambio de directorio actual
       if(!strcmp(dir,arbol->getDirectorioActual()->getHijos()->at(i)->getNombre())){
         arbol->setDirectorioActual(arbol->getDirectorioActual()->getHijos()->at(i));
         delete dir;
         return;
       }
   }
+  // Si el directorio no existe
   else if(arbol->buscarNodo(arbol->getDirectorioActual(), dir) == NULL){
     std::cout << "Error en cd: " << directorio << " no existe.\n";
+    delete dir;
     return;
   }
+  // Si se encuentra el directorio
   else
     arbol->setDirectorioActual(dir);
     delete dir;
 }
 
+// Creacion de directorio
 void makeDir(Arbol *arbol, std::string directorio){
   char* dir = new char(directorio.size() + 1);
   memcpy(dir, directorio.c_str(), directorio.size() + 1);
@@ -103,7 +116,7 @@ void removeFich(Arbol* arbol, std::string fichero){
   if(!arbol->buscarNodo(arbol->getDirectorioActual(), fich)->esDirectorio())
     arbol->eliminarNodo(fich);
   else
-    std::cout << "Error en rm: " << fichero << " es un directorio, no un directorio.\n";
+    std::cout << "Error en rm: " << fichero << " es un fichero, no un directorio.\n";
   delete fich;
 }
 

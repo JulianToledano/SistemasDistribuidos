@@ -47,7 +47,7 @@ int main(){
     printWD(directorioRemoto, false); std::cout << "> ";
 
     getline(std::cin, comando);
-    std::vector<std::string> argumentos = dividirArgumentos(comando);// = dividirArgumentos(comando);
+    std::vector<std::string> argumentos = dividirArgumentos(comando);
 
     try{
       switch (com.at(argumentos[0])){
