@@ -2,6 +2,7 @@
 #include <iostream>
 
 Arbol::Arbol(){
+  raid = new Raid();
   raiz = new Nodo(this);
   directorioActual = raiz;
   totalNodos = 0;

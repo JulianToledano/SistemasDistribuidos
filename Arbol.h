@@ -4,10 +4,12 @@
 class Nodo;
 
 #include "Nodo.h"
+#include "Raid.h"
 #include <sys/stat.h>
 #include <cstring>
 
 class Arbol{
+  Raid* raid;
   Nodo* raiz;
   Nodo* directorioActual;
   int totalNodos;
