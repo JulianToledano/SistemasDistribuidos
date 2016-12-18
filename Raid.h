@@ -1,9 +1,10 @@
-
+#include <string>
 
 class Raid{
 public:
   Raid();
-  void writeBlock();
+  // Copiar 1 bloque
+  void writeBlock(std::string nombre,int x);
   //void readBlock();
   //void writeFile();
   //void reafFile();
