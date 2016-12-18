@@ -20,7 +20,7 @@ void Raid::format(int tamano){
 }
 
 void Raid::writeBlock(std::string nombre, int count){
-  FILE *read = fopen("rrr.txt", "rb");
+  FILE *read = fopen(nombre.c_str(), "rb");
   FILE *write = fopen("disco1.dat", "ab+");
   char buffer[1024] ={};
   fseek(read, 1024*count, SEEK_SET);
@@ -60,14 +60,14 @@ void Raid::writeBlock(std::string nombre, int count){
   disc.close();
 }
 
-void Raid::writeFile(size_t mtamano){
+void Raid::writeFile(std::string nombre, size_t mtamano){
   float size = (float)mtamano/(float)1024;
   // Comprueba que size es un numero entero .00 si es así solo es necesario
   // iterar size veces, de lo contrario es necesario size+1 veces
   if(size-(int)size == 0)
     for(float i = 0.0; i < size; i++)
-      writeBlock("test",i);
+      writeBlock(nombre,i);
   else
     for(float i = 0.0; i <= size; i++)
-      writeBlock("test",i);
+      writeBlock(nombre,i);
 }
