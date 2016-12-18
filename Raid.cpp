@@ -5,26 +5,13 @@
 Raid::Raid(){
   format(32000);
 }
-// Tal vez sea innecesario rellenar sectoreslibres con numeros de 6 bytes
-// Ya que siempre hay que iterar a través de todo el archivo
 
 void Raid::format(int tamano){
   std::fstream libres("sectoresLibres1.dat", std::ios::out);
   if(libres.is_open()){
-    // Todos los numeros con una longitud de 6 bytes. De esta manera es fácil
-    // acceder (n * m - 6)
     for(int i = 1; i <= tamano; i++){
-      if(i < 10)
-      libres << "0000" << i;
-    else if(i < 100)
-      libres << "000" << i;
-    else if(i < 1000)
-      libres << "00" << i;
-    else if(i < 10000)
-      libres << "0" << i;
-    else
       libres << i;
-    libres << "\n";
+      libres << "\n";
     }
     libres.close();
   }
@@ -32,49 +19,38 @@ void Raid::format(int tamano){
   disco1.close();
 }
 
-void Raid::writeBlock(std::string nombre, int x){
-  std::fstream f("rrr.txt", std::ios::in | std::ios::binary);
-  std::fstream r("disco1.dat", std::ios::out | std::ios::app);
-
-  char buffer[1024];
-  f.seekg(1024*x);
-    f.read(buffer, sizeof(buffer));
-    r << buffer;
-  f.close();
-  r.close();
-
-
+void Raid::writeBlock(std::string nombre, int count){
+  FILE *read = fopen("rrr.txt", "rb");
+  FILE *write = fopen("disco1.dat", "ab+");
+  char buffer[1024] ={};
+  fseek(read, 1024*count, SEEK_SET);
+  fread(buffer, 1, 1024, read);
+  // Si al leer el archivo llega al final de éste y no rellena buffer
+  // lo rellenamos de basura
+  for(int i = 0; i < 1024; i++)
+    if(buffer[i] == '\0') buffer[i] ='#';
+  fwrite(buffer, 1, 1024, write);
+  fclose(read);
+  fclose(write);
 
   // 2ª parte
-  std::fstream temp("temp.dat", std::ios::out);
+  std::fstream temp("temp.dat", std::ios::out | std::ios::binary);
   std::fstream disc("sectoresLibres1.dat", std::ios::in);
+
   if(disc.is_open()){
     int sector;
     bool sectorEncontrado = false;
-
     for(int i = 1; i <= 32000; i++){
       disc >> sector;
       // Comprobamos hasta encontrar el primero de la lista distinto de cero.
       if(!sectorEncontrado && sector != 0) {
-        temp << "00000";
+        temp << "0";
         sectorEncontrado = true;
       }
-      else if(sector == 0)
-        temp << "00000";
-      else{
-        if(sector < 10)
-        temp << "0000" << sector;
-      else if(sector < 100)
-        temp << "000" << sector;
-      else if(sector < 1000)
-        temp << "00" << sector;
-      else if(sector < 10000)
-        temp << "0" << sector;
       else
         temp << sector;
-      }
       temp << "\n";
-    }
+      }
   }else
     std::cout << "Error.";
 
@@ -82,4 +58,16 @@ void Raid::writeBlock(std::string nombre, int x){
   rename("temp.dat", "sectoresLibres1.dat");
   temp.close();
   disc.close();
+}
+
+void Raid::writeFile(size_t mtamano){
+  float size = (float)mtamano/(float)1024;
+  // Comprueba que size es un numero entero .00 si es así solo es necesario
+  // iterar size veces, de lo contrario es necesario size+1 veces
+  if(size-(int)size == 0)
+    for(float i = 0.0; i < size; i++)
+      writeBlock("test",i);
+  else
+    for(float i = 0.0; i <= size; i++)
+      writeBlock("test",i);
 }
