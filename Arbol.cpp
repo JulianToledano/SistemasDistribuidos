@@ -1,12 +1,22 @@
 #include "Arbol.h"
 #include <iostream>
+#include <fstream>
 
 Arbol::Arbol(){
-  raid = new Raid();
-  raiz = new Nodo(this);
-  directorioActual = raiz;
-  totalNodos = 0;
-  ultimoID = 0;
+  struct stat st;
+  if(stat("arbol.dat", &st) == 0){
+    cargarArbol(NULL,0);
+    directorioActual = raiz;
+    ultimoID = 0;
+    remove("arbol.dat");
+  }
+  else{
+    raiz = new Nodo(this);
+    directorioActual = raiz;
+    totalNodos = 0;
+    ultimoID = 0;
+  }
+  std::cout << "Total nodos: " << totalNodos;
 }
 // Se inserta en el directorio alctual. Se sobreentiende que antes existirá un
 // control para no poder entrar a ficheros.
@@ -108,6 +118,66 @@ void Arbol::imprimir(Nodo* nodo, int tab){
       imprimir(nodo->getHijos()->at(i),tab+1);
     }
   }
+}
+
+void Arbol::guardarArbol(Nodo *nodo){
+  std::fstream f("arbol.dat", std::ios::out | std::ios::app | std::ios::binary);
+  f << nodo->getNivel() << '\n';
+  f << nodo->getNombre() << '\n';
+  f << nodo->getId() << '\n';
+  f << nodo->esDirectorio() << '\n';
+  f << nodo->getTamano() << '\n';
+  f << nodo->getUltimaModificacion() << '\n';
+  f.close();
+  for(int i = 0; i < nodo->getHijos()->size(); i++)
+    guardarArbol(nodo->getHijos()->at(i));
+
+}
+
+void Arbol::cargarArbol(Nodo *nodo, int n){
+  std::fstream f("arbol.dat", std::ios::in);
+  f.seekg(n, f.beg);
+  int mnivel; f >> mnivel;
+  std::string mnombre; f >> mnombre;
+  char* nom = new char(mnombre.size() + 1);
+  memcpy(nom, mnombre.c_str(), mnombre.size() + 1);
+  int mid; f >> mid;
+  bool dire; f >> dire;
+  off_t tam; f >> tam;
+  time_t ultmod; f >> ultmod;
+  f.seekg(0, f.cur);
+  int nn = f.tellg();
+  f.seekg(0, f.end);
+  int end = f.tellg();
+  if(nn == end) return;
+  // Si es la primera vez se carga la raiz.
+  if(mnivel == 0){
+    raiz = new Nodo(this);
+    raiz->setTamano(tam);
+    raiz->setModificacion(ultmod);
+    raiz->setNombre(nom);
+    f.close();
+    cargarArbol(raiz, nn);
+  }
+  // En caso contrario recorremos el arbol
+  else{
+    this->setDirectorioActual(nodo);
+    // Si el nivel leído no es uno superior al anterior hay que encontrar a su padre
+    if(mnivel - 1 != nodo->getNivel())
+      recur(nodo, mnivel);
+      this->insertarNodo(nom, dire, tam);
+      this->setDirectorioActual(this->getDirectorioActual()->getHijos()->at(this->getDirectorioActual()->getHijos()->size() - 1));
+      this->getDirectorioActual()->setId(mid);
+      this->getDirectorioActual()->setModificacion(ultmod);
+      cargarArbol(this->getDirectorioActual(), nn);
+      f.close();
+  }
+}
+
+void Arbol::recur(Nodo *nodo, int nivel){
+  this->setDirectorioActual(nodo->getPadre());
+  if(nivel - 1 == this->getDirectorioActual()->getNivel()) return;
+  else recur(this->getDirectorioActual(), nivel);
 }
 
 Arbol::~Arbol(){

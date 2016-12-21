@@ -1,5 +1,6 @@
 #include "Nodo.h"
 
+Nodo::Nodo(){}
 Nodo::Nodo(Arbol* arbol){
   esteArbol = arbol;
   padre = NULL;
@@ -34,6 +35,11 @@ off_t Nodo::getTamano(){return tamano;}
 time_t Nodo::getUltimaModificacion(){return ultimaModificacion;}
 
 void Nodo::setNombre(char* mnombre){strncpy(nombre, mnombre, MAX);}
+void Nodo::setId(int mid){id = mid;}
+void Nodo::setNivel(int mnivel){nivel = mnivel;}
+void Nodo::setDirectorio(bool mdirectorio){directorio = mdirectorio;}
 void Nodo::setTamano(off_t mtamano){tamano = mtamano;}
+void Nodo::setModificacion(time_t multimaModificacion){ultimaModificacion = multimaModificacion;}
 void Nodo::setUltimaModificacion(){ultimaModificacion = time(0);}
 void Nodo::setHijos(Nodo* nuevoNodo){hijos->push_back(nuevoNodo);}
+void Nodo::setArbol(Arbol *arbol){esteArbol = arbol;}

@@ -23,6 +23,7 @@ class Nodo{
   time_t ultimaModificacion;
 public:
   // Constructores
+  Nodo();
   Nodo(Arbol* arbol);
   Nodo(Arbol* arbol, Nodo *mpadre, char *mnombre, int mid, bool mdirectorio, off_t mtamano);
   // Métodos get
@@ -36,8 +37,13 @@ public:
   time_t getUltimaModificacion();
   // Métodos set
   void setNombre(char *mnombre);
+  void setId(int mid);
+  void setNivel(int mid);
+  void setDirectorio(bool mdirectorio);
   void setTamano(off_t mtamano);
+  void setModificacion(time_t multimaModificacion);
   void setUltimaModificacion();
   void setHijos(Nodo *nuevoNodo);
+  void setArbol(Arbol* arbol);
 };
 #endif

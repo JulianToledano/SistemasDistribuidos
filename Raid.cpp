@@ -7,7 +7,7 @@ Raid::Raid(){
 }
 
 void Raid::format(int tamano){
-  std::fstream libres("sectoresLibres1.dat", std::ios::out);
+  std::fstream libres("sectoresLibres1.dat", std::ios::out | std::ios::app);
   if(libres.is_open()){
     for(int i = 1; i <= tamano; i++){
       libres << i;
@@ -15,7 +15,7 @@ void Raid::format(int tamano){
     }
     libres.close();
   }
-  std::fstream disco1("disco1.dat", std::ios::out | std::ios::binary);
+  std::fstream disco1("disco1.dat", std::ios::out | std::ios::app | std::ios::binary);
   disco1.close();
 }
 
@@ -27,8 +27,8 @@ void Raid::writeBlock(std::string nombre, int count){
   fread(buffer, 1, 1024, read);
   // Si al leer el archivo llega al final de éste y no rellena buffer
   // lo rellenamos de basura
-  for(int i = 0; i < 1024; i++)
-    if(buffer[i] == '\0') buffer[i] ='#';
+  for(int i = 0; i < 1024; i++) /* MEJORAR*/
+    if(buffer[i] == '\0') buffer[i] ='0';
   fwrite(buffer, 1, 1024, write);
   fclose(read);
   fclose(write);

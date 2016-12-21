@@ -35,7 +35,6 @@ int main(){
 
   char cwd[1024];
   std::string comando;
-
   std::cout << "Bienvenido al sistema de ficheros distribuido.\n";
   std::cout << "El directorio remoto actual es: " << directorioRemoto->getDirectorioActual()->getNombre();
   if(getcwd(cwd, sizeof(cwd)) != NULL)
@@ -45,7 +44,7 @@ int main(){
 
   do{
     printWD(directorioRemoto, false); std::cout << "> ";
-
+    std::cin.clear();
     getline(std::cin, comando);
     std::vector<std::string> argumentos = dividirArgumentos(comando);
 
@@ -89,12 +88,12 @@ int main(){
           break;
         case Exit:
             std::cout << "Adiós\n";
+            directorioRemoto->guardarArbol(directorioRemoto->getRoot());
       }
   }catch(std::out_of_range e){
     std::cout << "Error de sintaxis: " << argumentos[0] << "\n";
   }
   argumentos.clear();
-  std::cin.clear();
   }while(comando != "exit");
 
   delete directorioRemoto;

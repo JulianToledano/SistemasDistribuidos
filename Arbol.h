@@ -9,14 +9,12 @@ class Nodo;
 #include <cstring>
 
 class Arbol{
-  Raid* raid;
   Nodo* raiz;
   Nodo* directorioActual;
   int totalNodos;
   int ultimoID;
 public:
   Arbol();
-
   // Operaciones con los nodos
   Nodo* insertarNodo(char *mnombre, bool directorio, off_t mtamano);
   Nodo* buscarNodo(char* nombre);
@@ -33,7 +31,9 @@ public:
   void setDirectorioActual(Nodo* nodo);
   // Usado únicamente en los tests
   void imprimir(Nodo* nodo, int tab);
-
+  void guardarArbol(Nodo* nodo);
+  void cargarArbol(Nodo* nodo, int n);
+  void recur(Nodo *nodo, int nivel);
   ~Arbol();
 };
 #endif
