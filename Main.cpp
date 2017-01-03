@@ -1,5 +1,7 @@
+
+
 #include "Arbol.h"
-//#include "Raid.h"
+#include "Raid.h"
 #include "ComandosRemoto.h"
 #include "ComandosLocal.h"
 #include <iostream>
@@ -69,7 +71,7 @@ int main(){
             makeDir(directorioRemoto, argumentos[1]);
             break;
         case rm:
-            removeFich(directorioRemoto, argumentos[1]);
+            removeFich(directorioRemoto, argumentos[1], raid);
             break;
         case Rmdir:
             removeDir(directorioRemoto, argumentos[1]);

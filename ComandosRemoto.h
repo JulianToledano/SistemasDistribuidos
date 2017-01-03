@@ -1,5 +1,6 @@
 #include "Arbol.h"
 #include "Nodo.h"
+#include "Raid.h"
 #include <cstring>
 #include <iostream>
 
@@ -111,11 +112,15 @@ void removeDir(Arbol* arbol, std::string directorio){
 }
 
 // rm
-void removeFich(Arbol* arbol, std::string fichero){
+void removeFich(Arbol* arbol, std::string fichero, Raid *raid){
   char* fich = new char(fichero.size() + 1);
   memcpy(fich, fichero.c_str(), fichero.size() + 1);
-  if(!arbol->buscarNodo(arbol->getDirectorioActual(), fich)->esDirectorio())
+  Nodo *aEliminar = arbol->buscarNodo(arbol->getDirectorioActual(), fich);
+  if(!aEliminar->esDirectorio()){
+    for(int i = 0; i < aEliminar->getNumBloques(); i++)
+      raid->liberarBloque(aEliminar->getBloques()[i]);
     arbol->eliminarNodo(fich);
+  }
   else
     std::cout << "Error en rm: " << fichero << " es un directorio, no un fichero.\n";
   delete fich;
