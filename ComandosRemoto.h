@@ -110,16 +110,19 @@ void removeDir(Arbol* arbol, std::string directorio){
   delete dir;
 }
 
+// rm
 void removeFich(Arbol* arbol, std::string fichero){
   char* fich = new char(fichero.size() + 1);
   memcpy(fich, fichero.c_str(), fichero.size() + 1);
   if(!arbol->buscarNodo(arbol->getDirectorioActual(), fich)->esDirectorio())
     arbol->eliminarNodo(fich);
   else
-    std::cout << "Error en rm: " << fichero << " es un fichero, no un directorio.\n";
+    std::cout << "Error en rm: " << fichero << " es un directorio, no un fichero.\n";
   delete fich;
 }
 
+// No es necesario retocar ya que son los mismos contenidos que la Copiar
+// Qué pasa si se borra uno?
 void copy(Arbol* arbol, std::string origen, std::string destino){
   char* ori = new char(origen.size() + 1);
   memcpy(ori, origen.c_str(), origen.size() + 1);

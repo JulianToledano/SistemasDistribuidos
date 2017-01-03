@@ -122,7 +122,7 @@ void Arbol::imprimir(Nodo* nodo, int tab){
 }
 
 void Arbol::guardarArbol(Nodo *nodo){
-  std::fstream f("arbol.dat", std::ios::out | std::ios::app | std::ios::binary);
+  std::fstream f("/home/julian/Documentos/SistemasDistribuidos/arbol.dat", std::ios::out | std::ios::app | std::ios::binary);
   f << nodo->getNivel() << '\n';
   f << nodo->getNombre() << '\n';
   f << nodo->getId() << '\n';
@@ -140,7 +140,7 @@ void Arbol::guardarArbol(Nodo *nodo){
 }
 
 void Arbol::cargarArbol(Nodo *nodo, int n){
-  std::fstream f("arbol.dat", std::ios::in);
+  std::fstream f("/home/julian/Documentos/SistemasDistribuidos/arbol.dat", std::ios::in);
   f.seekg(n, f.beg);
   int mnivel; f >> mnivel;
   std::string mnombre; f >> mnombre;

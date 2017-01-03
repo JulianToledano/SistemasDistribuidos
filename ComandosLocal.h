@@ -71,11 +71,25 @@ void uploadRecursivo(Arbol *arbol, char* path, char* directorio, Raid *raid){
           // Guardamos el directorio actual
           Nodo* temp = arbol->getDirectorioActual();
           // Insertamos los hijos
-          arbol->insertarNodo(d->d_name, esDirectorio(pathCompleto,d->d_name), tamano(pathCompleto,d->d_name));
-          // Insertamos los hijos de los hijos
-          uploadRecursivo(arbol, pathCompleto, d->d_name, raid);
+          //En caso de ser un directorio
+          if(esDirectorio(pathCompleto,d->d_name)){
+            arbol->insertarNodo(d->d_name, true, tamano(pathCompleto,d->d_name));
+            // Insertamos los hijos de los hijos
+            uploadRecursivo(arbol, pathCompleto, d->d_name, raid);
+          }
+          else{
+            char *file = (char*)malloc(1 + strlen(pathCompleto) + strlen(barra) + strlen(d->d_name));
+            strcat(file, pathCompleto);
+            strcat(file, barra);
+            strcat(file, d->d_name);
+            arbol->insertarNodo(d->d_name, false, tamano(pathCompleto, d->d_name));
+            for(int i = 0; i < arbol->getDirectorioActual()->getHijos()->size(); i++)
+              if(!strcmp(arbol->getDirectorioActual()->getHijos()->at(i)->getNombre(), d->d_name))
+                raid->writeFile(file, tamano(pathCompleto, d->d_name), arbol->getDirectorioActual()->getHijos()->at(i));
+          }
           // Devolvemos el nodo actual a su posición
           arbol->setDirectorioActual(temp);
+
         }
       }
     }
@@ -85,12 +99,9 @@ void uploadRecursivo(Arbol *arbol, char* path, char* directorio, Raid *raid){
     if(stat(pathCompleto, &st) == 0)
       arbol->insertarNodo(directorio, false, st.st_size);
     // 2º Guardamos en archivos .dat y retocamos bloques en el nodo
-    Nodo *actual = arbol->getDirectorioActual();
-    for(int i = 0; i < actual->getHijos()->size(); i++)
-      if(!strcmp(actual->getHijos()->at(i)->getNombre(), directorio))
-        arbol->setDirectorioActual(actual->getHijos()->at(i));
-    raid->writeFile(directorio, st.st_size, arbol->getDirectorioActual());
-    arbol->setDirectorioActual(actual);
+    for(int i = 0; i < arbol->getDirectorioActual()->getHijos()->size(); i++)
+      if(!strcmp(arbol->getDirectorioActual()->getHijos()->at(i)->getNombre(), directorio))
+        raid->writeFile(pathCompleto, st.st_size, arbol->getDirectorioActual()->getHijos()->at(i));
 
   }
 }

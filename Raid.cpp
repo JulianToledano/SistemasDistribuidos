@@ -19,22 +19,9 @@ Raid::Raid(){
 }
 
 void Raid::writeBlock(std::string nombre, int count, Nodo *nodo){
-  FILE *read = fopen(nombre.c_str(), "rb");
-  FILE *write = fopen("disco1.dat", "ab+");
-  char buffer[1024] ={};
-  fseek(read, 1024*count, SEEK_SET);
-  fread(buffer, 1, 1024, read);
-  // Si al leer el archivo llega al final de éste y no rellena buffer
-  // lo rellenamos de basura
-  for(int i = 0; i < 1024; i++) /* MEJORAR*/
-    if(buffer[i] == '\0') buffer[i] ='0';
-  fwrite(buffer, 1, 1024, write);
-  fclose(read);
-  fclose(write);
-
-  // 2ª parte. Solo escribe un bloque.
+  // 1ª parte. Encontramos el sector libre.
   std::fstream temp("temp.dat", std::ios::out | std::ios::binary);
-  std::fstream disc("sectoresLibres1.dat", std::ios::in);
+  std::fstream disc("/home/julian/Documentos/SistemasDistribuidos/sectoresLibres1.dat", std::ios::in);
 
   if(disc.is_open()){
     int sector;
@@ -52,11 +39,25 @@ void Raid::writeBlock(std::string nombre, int count, Nodo *nodo){
       temp << "\n";
       }
   }
-
   remove("sectoresLibres1.dat");
-  rename("temp.dat", "sectoresLibres1.dat");
+  rename("temp.dat", "/home/julian/Documentos/SistemasDistribuidos/sectoresLibres1.dat");
   temp.close();
   disc.close();
+
+  // 2ª parte escribimos o sobreescribimos el bloque
+  FILE *read = fopen(nombre.c_str(), "rb");
+  if(read == NULL) perror("Error");
+  FILE *write = fopen("/home/julian/Documentos/SistemasDistribuidos/disco1.dat", "ab+");
+  char buffer[1024] ={};
+  fseek(read, 1024*count, SEEK_SET);
+  fread(buffer, 1, 1024, read);
+  // Si al leer el archivo llega al final de éste y no rellena buffer
+  // lo rellenamos de basura
+  for(int i = 0; i < 1024; i++) /* MEJORAR*/
+    if(buffer[i] == '\0') buffer[i] ='0';
+  fwrite(buffer, 1, 1024, write);
+  fclose(read);
+  fclose(write);
 }
 
 void Raid::writeFile(std::string nombre, size_t mtamano, Nodo *nodo){
