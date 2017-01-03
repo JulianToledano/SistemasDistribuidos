@@ -1,8 +1,8 @@
 #include "Arbol.h"
+//#include "Raid.h"
 #include "ComandosRemoto.h"
 #include "ComandosLocal.h"
 #include <iostream>
-//#include <unistd.h>
 #include <map>
 #include <string>
 #include<sstream>
@@ -32,7 +32,7 @@ int main(){
   inicializarComandos(com);
 
   Arbol* directorioRemoto = new Arbol();
-
+  Raid *raid = new Raid();
   char cwd[1024];
   std::string comando;
   std::cout << "Bienvenido al sistema de ficheros distribuido.\n";
@@ -84,7 +84,7 @@ int main(){
             localcd(argumentos[1]);
             break;
         case Lupload:
-          lupload(directorioRemoto, argumentos[1]);
+          lupload(directorioRemoto, argumentos[1], raid);
           break;
         case Exit:
             std::cout << "Adiós\n";

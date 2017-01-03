@@ -1,10 +1,5 @@
 #include "Raid.h"
 #include <fstream>
-#include <iostream>
-
-Raid::Raid(){
-  format(32000);
-}
 
 void Raid::format(int tamano){
   std::fstream libres("sectoresLibres1.dat", std::ios::out | std::ios::app);
@@ -19,7 +14,11 @@ void Raid::format(int tamano){
   disco1.close();
 }
 
-void Raid::writeBlock(std::string nombre, int count){
+Raid::Raid(){
+  format(32000);
+}
+
+void Raid::writeBlock(std::string nombre, int count, Nodo *nodo){
   FILE *read = fopen(nombre.c_str(), "rb");
   FILE *write = fopen("disco1.dat", "ab+");
   char buffer[1024] ={};
@@ -33,7 +32,7 @@ void Raid::writeBlock(std::string nombre, int count){
   fclose(read);
   fclose(write);
 
-  // 2ª parte
+  // 2ª parte. Solo escribe un bloque.
   std::fstream temp("temp.dat", std::ios::out | std::ios::binary);
   std::fstream disc("sectoresLibres1.dat", std::ios::in);
 
@@ -44,6 +43,7 @@ void Raid::writeBlock(std::string nombre, int count){
       disc >> sector;
       // Comprobamos hasta encontrar el primero de la lista distinto de cero.
       if(!sectorEncontrado && sector != 0) {
+        nodo->anadirBloques(sector);
         temp << "0";
         sectorEncontrado = true;
       }
@@ -51,8 +51,7 @@ void Raid::writeBlock(std::string nombre, int count){
         temp << sector;
       temp << "\n";
       }
-  }else
-    std::cout << "Error.";
+  }
 
   remove("sectoresLibres1.dat");
   rename("temp.dat", "sectoresLibres1.dat");
@@ -60,14 +59,14 @@ void Raid::writeBlock(std::string nombre, int count){
   disc.close();
 }
 
-void Raid::writeFile(std::string nombre, size_t mtamano){
+void Raid::writeFile(std::string nombre, size_t mtamano, Nodo *nodo){
   float size = (float)mtamano/(float)1024;
   // Comprueba que size es un numero entero .00 si es así solo es necesario
   // iterar size veces, de lo contrario es necesario size+1 veces
   if(size-(int)size == 0)
     for(float i = 0.0; i < size; i++)
-      writeBlock(nombre,i);
+      writeBlock(nombre,i, nodo);
   else
     for(float i = 0.0; i <= size; i++)
-      writeBlock(nombre,i);
+      writeBlock(nombre,i, nodo);
 }

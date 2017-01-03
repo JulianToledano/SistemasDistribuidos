@@ -21,6 +21,8 @@ class Nodo{
   bool directorio;
   off_t tamano;
   time_t ultimaModificacion;
+  int numBloques;
+  int *bloques;
 public:
   // Constructores
   Nodo();
@@ -35,6 +37,8 @@ public:
   bool esDirectorio();
   off_t getTamano();
   time_t getUltimaModificacion();
+  int getNumBloques();
+  int* getBloques();
   // Métodos set
   void setNombre(char *mnombre);
   void setId(int mid);
@@ -45,5 +49,8 @@ public:
   void setUltimaModificacion();
   void setHijos(Nodo *nuevoNodo);
   void setArbol(Arbol* arbol);
+  void setNumBloques(int numBloques);
+  void setBloques(int *bloques);
+  void anadirBloques(int sector);
 };
 #endif

@@ -4,7 +4,6 @@
 class Nodo;
 
 #include "Nodo.h"
-#include "Raid.h"
 #include <sys/stat.h>
 #include <cstring>
 

@@ -1,6 +1,7 @@
 #include "Arbol.h"
 #include <iostream>
 #include <fstream>
+#include <stdlib.h>
 
 Arbol::Arbol(){
   struct stat st;
@@ -128,6 +129,10 @@ void Arbol::guardarArbol(Nodo *nodo){
   f << nodo->esDirectorio() << '\n';
   f << nodo->getTamano() << '\n';
   f << nodo->getUltimaModificacion() << '\n';
+  f << nodo->getNumBloques() << '\n';
+  for(int i = 0; i < nodo->getNumBloques(); i++)
+    f << nodo->getBloques()[i] << ' ';
+  f << '\n';
   f.close();
   for(int i = 0; i < nodo->getHijos()->size(); i++)
     guardarArbol(nodo->getHijos()->at(i));
@@ -145,6 +150,13 @@ void Arbol::cargarArbol(Nodo *nodo, int n){
   bool dire; f >> dire;
   off_t tam; f >> tam;
   time_t ultmod; f >> ultmod;
+  int numBloques; f >> numBloques;
+  int *bloques = (int*)malloc(numBloques*sizeof(int));
+  // Comprobamos que guarda bloques
+  if(numBloques > 0){
+    for(int i = 0; i < numBloques; i++)
+      f >> bloques[i];
+  }
   f.seekg(0, f.cur);
   int nn = f.tellg();
   f.seekg(0, f.end);
@@ -169,6 +181,8 @@ void Arbol::cargarArbol(Nodo *nodo, int n){
       this->setDirectorioActual(this->getDirectorioActual()->getHijos()->at(this->getDirectorioActual()->getHijos()->size() - 1));
       this->getDirectorioActual()->setId(mid);
       this->getDirectorioActual()->setModificacion(ultmod);
+      this->getDirectorioActual()->setNumBloques(numBloques);
+      this->getDirectorioActual()->setBloques(bloques);
       cargarArbol(this->getDirectorioActual(), nn);
       f.close();
   }
