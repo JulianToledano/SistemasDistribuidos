@@ -1,8 +1,9 @@
 #include "Raid.h"
 #include <fstream>
+#include <stdlib.h>
 
 void Raid::format(int tamano){
-  std::fstream libres("sectoresLibres1.dat", std::ios::out | std::ios::app);
+  std::fstream libres("/home/julian/Documentos/SistemasDistribuidos/sectoresLibres1.dat", std::ios::out | std::ios::app);
   if(libres.is_open()){
     for(int i = 1; i <= tamano; i++){
       libres << i;
@@ -10,7 +11,7 @@ void Raid::format(int tamano){
     }
     libres.close();
   }
-  std::fstream disco1("disco1.dat", std::ios::out | std::ios::app | std::ios::binary);
+  std::fstream disco1("/home/julian/Documentos/SistemasDistribuidos/disco1.dat", std::ios::out | std::ios::app | std::ios::binary);
   disco1.close();
 }
 
@@ -39,7 +40,7 @@ void Raid::writeBlock(std::string nombre, int count, Nodo *nodo){
       temp << "\n";
       }
   }
-  remove("sectoresLibres1.dat");
+  remove("/home/julian/Documentos/SistemasDistribuidos/sectoresLibres1.dat");
   rename("temp.dat", "/home/julian/Documentos/SistemasDistribuidos/sectoresLibres1.dat");
   temp.close();
   disc.close();
@@ -87,8 +88,26 @@ void Raid::liberarBloque(int n){
 
     }
   }
-  remove("sectoresLibres1.dat");
+  remove("/home/julian/Documentos/SistemasDistribuidos/sectoresLibres1.dat");
   rename("temp.dat", "/home/julian/Documentos/SistemasDistribuidos/sectoresLibres1.dat");
   temp.close();
   disc.close();
+}
+
+void Raid::readBlock(int n){
+  FILE *read = fopen("/home/julian/Documentos/SistemasDistribuidos/disco1.dat", "r");
+  FILE *write = fopen("/home/julian/Documentos/SistemasDistribuidos/test.dat", "a");
+  char *buffer[1024] = {};
+  // Posicionamos el puntero para leer desde el lugar adecuado
+  fseek(read, 1024*n, SEEK_SET);
+  fread(buffer, 1, 1024, read);
+  fwrite(buffer, sizeof(buffer), 1, write);
+  fclose(read);
+  fclose(write);
+}
+
+void Raid::readFile(Nodo *nodo){
+  for(int i = 0; i < nodo->getNumBloques(); i++)
+    readBlock(nodo->getBloques()[i]);
+
 }

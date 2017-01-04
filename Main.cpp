@@ -98,6 +98,17 @@ int main(){
   argumentos.clear();
   }while(comando != "exit");
 
+
+/*************TEST**************/
+std::cout << "Que nodo queieres leer: ";
+std::string n; std::cin >> n;
+char* fich = new char(n.size() + 1);
+memcpy(fich, n.c_str(), n.size() + 1);
+raid->readFile(directorioRemoto->buscarNodo(directorioRemoto->getRoot(), fich));
+
+
+
+
   delete directorioRemoto;
   return 0;
 }
