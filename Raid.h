@@ -7,7 +7,7 @@ public:
   Raid();
   void format(int tamano);
   // Copiar 1 bloque
-  void writeBlock(std::string nombre, int count, Nodo *nodo);
+  void writeBlock(std::string nombre, int count, int disco, Nodo *nodo);
   // Función que libera un sector al ser llamada desde rm
   void liberarBloque(int n);
   void writeFile(std::string nombre, size_t mtamano, Nodo *nodo);
