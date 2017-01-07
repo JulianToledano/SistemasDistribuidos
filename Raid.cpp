@@ -1,3 +1,4 @@
+// Julián Toledano Díaz
 #include "Raid.h"
 #include <fstream>
 #include <stdlib.h>

@@ -1,3 +1,5 @@
+// Julián Toledano Díaz
+
 #include "Nodo.h"
 #include <stdlib.h>
 

@@ -1,3 +1,5 @@
+// Julián Toledano Díaz
+
 #pragma once
 #include <string>
 #include "Nodo.h"
