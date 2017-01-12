@@ -50,6 +50,11 @@ int main(){
       MPI_Recv(buffer,1025,MPI_CHAR,0,0,MPI_COMM_WORLD, &status);
       raid->writeBlock(sector, buffer);
     }
+    if(code == 2){
+      int sector;
+      MPI_Recv(&sector,1,MPI_INT,0,0,MPI_COMM_WORLD, &status);
+      raid->readBlock(sector);
+    }
   }
   MPI_Finalize();
   return 0;

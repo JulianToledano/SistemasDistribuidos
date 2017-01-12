@@ -81,6 +81,13 @@ void makeDir(Arbol *arbol, std::string directorio){
   delete dir;
 }
 
+void touch(Arbol *arbol, std::string archivo){
+  char* file = new char(archivo.size() + 1);
+  memcpy(file, archivo.c_str(), archivo.size() + 1);
+  arbol->insertarNodo(file, false, 0);
+  delete file;
+}
+
 void mv(Arbol* arbol, std::string nombre1, std::string nombre2){
     char* dir1 = new char(nombre1.size() + 1);
     memcpy(dir1, nombre1.c_str(), nombre1.size() + 1);
@@ -114,7 +121,7 @@ void removeDir(Arbol* arbol, std::string directorio){
 
 // rm
 void removeFich(Arbol* arbol, std::string fichero, Raid *raid){
-  char* fich = new char(fichero.size() + 1);
+  /*char* fich = new char(fichero.size() + 1);
   memcpy(fich, fichero.c_str(), fichero.size() + 1);
   Nodo *aEliminar = arbol->buscarNodo(arbol->getDirectorioActual(), fich);
   if(!aEliminar->esDirectorio()){
@@ -124,7 +131,7 @@ void removeFich(Arbol* arbol, std::string fichero, Raid *raid){
   }
   else
     std::cout << "Error en rm: " << fichero << " es un directorio, no un fichero.\n";
-  delete fich;
+  delete fich;*/
 }
 
 // No es necesario retocar ya que son los mismos contenidos que la Copiar

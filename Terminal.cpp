@@ -17,9 +17,10 @@
 enum comandos{Exit, ls,
               pwd,  cd,
               Mv,   cp,
-              Mkdir,rm,
-              Rmdir,lls,
-              lpwd, lcd,
+              Mkdir,Touch,
+              rm,   Rmdir,
+              lls,  lpwd,
+              lcd,  down,
               Lupload};
 
 // Divide el string insertado por teclado y lo introduce
@@ -76,6 +77,9 @@ int main(){
             case Mkdir:
                 makeDir(directorioRemoto, argumentos[1]);
                 break;
+            case Touch:
+                touch(directorioRemoto, argumentos[1]);
+                break;
             case rm:
                 //removeFich(directorioRemoto, argumentos[1], raid);
                 break;
@@ -92,15 +96,16 @@ int main(){
                 localcd(argumentos[1]);
                 break;
             case Lupload:
-              lupload(directorioRemoto, argumentos[1]);
-              break;
+                lupload(directorioRemoto, argumentos[1]);
+                break;
+            case down:
+                download(directorioRemoto, argumentos[1]);
+                break;
             case Exit:
                 // Enviamos codigo -1 a los esclavos.
                 int codigo = -1;
-                MPI_Send(&codigo,1,MPI_INT,1,0,MPI_COMM_WORLD);
-                MPI_Send(&codigo,1,MPI_INT,2,0,MPI_COMM_WORLD);
-                MPI_Send(&codigo,1,MPI_INT,3,0,MPI_COMM_WORLD);
-                MPI_Send(&codigo,1,MPI_INT,4,0,MPI_COMM_WORLD);
+              //  for(int i = 1; i < 5; i++)
+                  MPI_Send(&codigo,1,MPI_INT,1,0,MPI_COMM_WORLD);
                 std::cout << "Adiós\n";
                 directorioRemoto->guardarArbol(directorioRemoto->getRoot());
           }
@@ -109,15 +114,7 @@ int main(){
       }
       argumentos.clear();
       }while(comando != "exit");
-    }// if rank == 0
-/*
-/*************TEST**************//*
-std::cout << "Que nodo queieres leer: ";
-std::string n; std::cin >> n;
-char* fich = new char(n.size() + 1);
-memcpy(fich, n.c_str(), n.size() + 1);
-raid->readFile(directorioRemoto->buscarNodo(directorioRemoto->getRoot(), fich));
-*/
+    }
 
   MPI_Finalize();
   delete directorioRemoto;
@@ -141,10 +138,12 @@ void inicializarComandos(std::map<std::string, comandos>&com){
   com.insert(std::pair<std::string, comandos>("mv", Mv));
   com.insert(std::pair<std::string, comandos>("cp", cp));
   com.insert(std::pair<std::string, comandos>("mkdir", Mkdir));
+  com.insert(std::pair<std::string, comandos>("touch", Touch));
   com.insert(std::pair<std::string, comandos>("rm", rm));
   com.insert(std::pair<std::string, comandos>("rmdir", Rmdir));
   com.insert(std::pair<std::string, comandos>("lls", lls));
   com.insert(std::pair<std::string, comandos>("lpwd", lpwd));
   com.insert(std::pair<std::string, comandos>("lcd", lcd));
   com.insert(std::pair<std::string, comandos>("lupload", Lupload));
+  com.insert(std::pair<std::string, comandos>("download", down));
 }

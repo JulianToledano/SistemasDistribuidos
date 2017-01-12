@@ -102,8 +102,8 @@ void uploadRecursivo(Arbol *arbol, char* path, char* directorio){
           MPI_Status status;
           int bloque;
           int esclavo = j%4+1;
-          MPI_Send(&codigo,1,MPI_INT,esclavo,0,MPI_COMM_WORLD); //i%4+1
-          MPI_Recv(&bloque,1,MPI_INT,esclavo,0,MPI_COMM_WORLD,&status);
+          MPI_Send(&codigo,1,MPI_INT,1,0,MPI_COMM_WORLD); //i%4+1 //******
+          MPI_Recv(&bloque,1,MPI_INT,1,0,MPI_COMM_WORLD,&status);//*********
           arbol->getDirectorioActual()->getHijos()->at(i)->anadirBloques(bloque);
         }
         //std::cout << "antes de write\n";
@@ -136,4 +136,12 @@ bool esDirectorio(char* path, char *nombre){
     if(S_ISDIR(st.st_mode))
       return true;
   return -false;
+}
+
+void download(Arbol *arbol, std::string nombre){
+  char *nom = new char(nombre.size() + 1);
+  memcpy(nom, nombre.c_str(), nombre.size() + 1);
+  arbol->buscarNodo(nom);
+  Raid *raid = new Raid(false);
+  raid->readFile(nombre, arbol->buscarNodo(nom)->getBloques(), arbol->buscarNodo(nom)->getNumBloques());
 }

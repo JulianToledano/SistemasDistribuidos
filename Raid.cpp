@@ -34,89 +34,44 @@ void Raid::writeFile(std::string nombre, int *sectores, int size){
   int codigo = 1;
   for(int i = 0; i < size; i++){
     char buffer[1025] = {};
-    //std::cout << "Dentro bucle write file. iteracion: " << i << " sector " << sectores[i] << "\n";
-    MPI_Send(&codigo,1,MPI_INT,i%4+1,0,MPI_COMM_WORLD);
+    int esclavo = i%4+1;
+    MPI_Send(&codigo,1,MPI_INT,1,0,MPI_COMM_WORLD); //*****
     fseek(read, 1024*i, SEEK_SET);
     fread(buffer, 1, 1024, read);
-    int esclavo = i%4+1;
-    // Rellenamos de 0s
+    // Rellenamos de 0s si ocupa menos de 1024
     for(int j = 0; j < 1024; j++) if(buffer[j] == '\0')buffer[j] = '0';
-    MPI_Send(&sectores[i],1,MPI_INT,esclavo,0,MPI_COMM_WORLD);
-    MPI_Send(buffer,1025,MPI_CHAR,esclavo,0,MPI_COMM_WORLD);
-    //std::cout << "Se envio\n";
+    MPI_Send(&sectores[i],1,MPI_INT,1,0,MPI_COMM_WORLD); //***
+    MPI_Send(buffer,1025,MPI_CHAR,1,0,MPI_COMM_WORLD); //*****
   }
   fclose(read);
 }
 
-void Raid::liberarBloque(int n){
-  std::fstream temp("temp.dat", std::ios::out | std::ios::binary);
-  std::fstream disc;
-  if(n <= 32000)
-    disc.open("/home/julian/Documents/SistemasDistribuidos/sectoresLibres1.dat", std::ios::in);
-  else if(n <= 64000)
-    disc.open("/home/julian/Documents/SistemasDistribuidos/sectoresLibres2.dat", std::ios::in);
-  else if(n <= 96000)
-    disc.open("/home/julian/Documents/SistemasDistribuidos/sectoresLibres3.dat", std::ios::in);
-  else
-    disc.open("/home/julian/Documents/SistemasDistribuidos/sectoresLibres4.dat", std::ios::in);
-
-  if(disc.is_open()){
-    int sector;
-    for(int i = 1; i <= 32000; i++){
-      disc >> sector;
-      // Comprobamos hasta encontrar el primero de la lista distinto de cero.
-      if(i == n % 32000 || (i == 32000 && n % 32000 == 0)) temp << n << "\n";
-      else temp << sector << "\n";
-
-    }
-  }
-  if(n <= 32000){
-    remove("/home/julian/Documents/SistemasDistribuidos/sectoresLibres1.dat");
-    rename("temp.dat", "/home/julian/Documents/SistemasDistribuidos/sectoresLibres1.dat");
-  }
-  else if(n <= 64000){
-    remove("/home/julian/Documents/SistemasDistribuidos/sectoresLibres2.dat");
-    rename("temp.dat", "/home/julian/Documents/SistemasDistribuidos/sectoresLibres2.dat");
-  }
-  else if(n <= 96000){
-    remove("/home/julian/Documents/SistemasDistribuidos/sectoresLibres3.dat");
-    rename("temp.dat", "/home/julian/Documents/SistemasDistribuidos/sectoresLibres3.dat");
-  }
-  else{
-    remove("/home/julian/Documents/SistemasDistribuidos/sectoresLibres4.dat");
-    rename("temp.dat", "/home/julian/Documents/SistemasDistribuidos/sectoresLibres4.dat");
-  }
-  temp.close();
-  disc.close();
+void Raid::readBlock(int bloque){
+  std::ifstream file;
+  file.open("disco.dat", std::ios::binary);
+  file.seekg(1024*(bloque-1));
+  char buffer[1024] = {};
+  file.read(buffer, sizeof(buffer));
+  std::cout << buffer;
+  MPI_Send(buffer,1024,MPI_CHAR,0,0,MPI_COMM_WORLD);
+  file.close();
 }
 
-void Raid::readBlock(int n){
-  FILE *read;
-  if(n <= 32000)
-    read = fopen("/home/julian/Documents/SistemasDistribuidos/disco1.dat", "r");
-  else if(n <= 64000)
-    read = fopen("/home/julian/Documents/SistemasDistribuidos/disco2.dat", "r");
-  else if(n <= 96000)
-    read = fopen("/home/julian/Documents/SistemasDistribuidos/disco3.dat", "r");
-  else
-    read = fopen("/home/julian/Documents/SistemasDistribuidos/disco4.dat", "r");
-
-  FILE *write = fopen("/home/julian/Documents/SistemasDistribuidos/test.dat", "a");
-  int posicion = n%32000;
-  if(posicion == 0)posicion = 32000;
-  char *buffer[1024] = {};
-  // Posicionamos el puntero para leer desde el lugar adecuado
-  fseek(read, 1024*posicion, SEEK_SET);
-  fread(buffer, 1, 1024, read);
-  fwrite(buffer, sizeof(buffer), 1, write);
-  fclose(read);
-  fclose(write);
-}
-
-void Raid::readFile(Nodo *nodo){
-  for(int i = 0; i < nodo->getNumBloques(); i++)
-    readBlock(nodo->getBloques()[i]);
-
+void Raid::readFile(std::string nombre, int *bloques, int size){
+  std::ofstream file;
+  file.open(nombre.c_str(), std::ios::app);
+  int codigo = 2;
+  MPI_Status status;
+  for(int i = 0; i < size; i++){
+    // Mandamos el codigo
+    int esclavo = i%4+1;
+    MPI_Send(&codigo,1,MPI_INT,1,0,MPI_COMM_WORLD);//****
+    MPI_Send(&bloques[i],1,MPI_INT,1,0,MPI_COMM_WORLD);//*****
+    char buffer[1024] = {};
+    MPI_Recv(buffer,1024,MPI_CHAR,1,0,MPI_COMM_WORLD,&status);//******
+    file << buffer;
+  }
+  file.close();
 }
 
 void Raid::setSize(int msize){size = msize;}
