@@ -1,4 +1,6 @@
 // Julián Toledano Díaz
+// Sistemas Distribuidos
+
 #include <mpi.h>
 #include "Arbol.h"
 #include "Raid.h"
@@ -81,6 +83,10 @@ void uploadRecursivo(Arbol *arbol, char* path, char* directorio){
             uploadRecursivo(arbol, pathCompleto, d->d_name);
           }
           // En caso de ser un archivo
+          /*********************************
+          *   ERROR: segmentation fault    *
+          *            linea 108           *
+          *********************************/
           else{
             char *file = (char*)malloc(1 +strlen(pathCompleto) + strlen(barra) + strlen(d->d_name));
             strcat(file, pathCompleto);
@@ -100,10 +106,10 @@ void uploadRecursivo(Arbol *arbol, char* path, char* directorio){
                     MPI_Send(&codigo,1,MPI_INT,1,0,MPI_COMM_WORLD); //i%4+1 //******
                     MPI_Recv(&bloque,1,MPI_INT,1,0,MPI_COMM_WORLD,&status);//*********
                     arbol->getDirectorioActual()->getHijos()->at(i)->anadirBloques(bloque);
-                  }// for j
-                  raid->writeFile(file, arbol->getDirectorioActual()->getHijos()->at(i)->getBloques(),arbol->getDirectorioActual()->getHijos()->at(i)->getNumBloques());
-              }// if strcmp
-            }// for
+                  }
+                  raid->writeFile(file, arbol->getDirectorioActual()->getHijos()->at(i)->getBloques(),arbol->getDirectorioActual()->getHijos()->at(i)->getNumBloques()); // ERROR
+              }
+            }
           }
           // Devolvemos el nodo actual a su posición
           arbol->setDirectorioActual(temp);
@@ -122,18 +128,17 @@ void uploadRecursivo(Arbol *arbol, char* path, char* directorio){
         if(numBloques-(int)numBloques == 0) numBloques += 1;
         // 2.1 -> Guardamos los sectores libres en el array de nodos
         for(int j = 0; j < numBloques; j++){
-          // Se envia una peticion de bloques codigo 0
+          // Se envia una peticion de bloques: codigo 0
           int codigo = 0;
           MPI_Status status;
           int bloque;
           int esclavo = j%4+1;
-          MPI_Send(&codigo,1,MPI_INT,1,0,MPI_COMM_WORLD); //i%4+1 //******
-          MPI_Recv(&bloque,1,MPI_INT,1,0,MPI_COMM_WORLD,&status);//*********
+          MPI_Send(&codigo,1,MPI_INT,esclavo,0,MPI_COMM_WORLD);         // MPI
+          MPI_Recv(&bloque,1,MPI_INT,esclavo,0,MPI_COMM_WORLD,&status); // MPI
           arbol->getDirectorioActual()->getHijos()->at(i)->anadirBloques(bloque);
         }
-        //std::cout << "antes de write\n";
+        // Escreibimos el archivo en los discos.
         raid->writeFile(pathCompleto, arbol->getDirectorioActual()->getHijos()->at(i)->getBloques(),arbol->getDirectorioActual()->getHijos()->at(i)->getNumBloques());
-        //std::cout << "despues de write\n";
       }
 
   }

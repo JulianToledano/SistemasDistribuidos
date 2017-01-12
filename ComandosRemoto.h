@@ -1,4 +1,6 @@
 // Julián Toledano Díaz
+// Sistemas Distribuidos
+
 #include "Arbol.h"
 #include "Nodo.h"
 #include "Raid.h"
@@ -81,6 +83,7 @@ void makeDir(Arbol *arbol, std::string directorio){
   delete dir;
 }
 
+// Creacion de archivos vacíos
 void touch(Arbol *arbol, std::string archivo){
   char* file = new char(archivo.size() + 1);
   memcpy(file, archivo.c_str(), archivo.size() + 1);
@@ -134,7 +137,6 @@ void removeFich(Arbol* arbol, std::string fichero, Raid *raid){
   delete fich;*/
 }
 
-// No es necesario retocar ya que son los mismos contenidos que la Copiar
 // Qué pasa si se borra uno?
 void copy(Arbol* arbol, std::string origen, std::string destino){
   char* ori = new char(origen.size() + 1);

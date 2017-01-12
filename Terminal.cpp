@@ -1,4 +1,5 @@
 // Julián Toledano Díaz
+// Sistemas Distribuidos
 
 #include "mpi.h"
 #include "Arbol.h"
@@ -40,81 +41,80 @@ int main(){
   //Raid *raid;
   MPI_Init(NULL, NULL);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  // Este bucle impide que los procesos esclavo se detengan
-    if(rank == 0){
-      char cwd[1024];
-      std::string comando;
-      std::cout << "Bienvenido al sistema de ficheros distribuido.\n";
-      std::cout << "El directorio remoto actual es: " << directorioRemoto->getDirectorioActual()->getNombre();
-      if(getcwd(cwd, sizeof(cwd)) != NULL)
-        std::cout << "\nEl directorio local actual es: " << cwd << std::endl;
-      else
-        std::cout << "getcwd(). Error.";
 
-      do{
-        printWD(directorioRemoto, false); std::cout << "> ";
-        std::cin.clear();
-        getline(std::cin, comando);
-        std::vector<std::string> argumentos = dividirArgumentos(comando);
+  char cwd[1024];
+  std::string comando;
+  std::cout << "Bienvenido al sistema de ficheros distribuido.\n";
+  std::cout << "El directorio remoto actual es: " << directorioRemoto->getDirectorioActual()->getNombre();
+  if(getcwd(cwd, sizeof(cwd)) != NULL)
+    std::cout << "\nEl directorio local actual es: " << cwd << std::endl;
+  else
+    std::cout << "getcwd(). Error.";
 
-        try{
-          switch (com.at(argumentos[0])){
-            case ls://if(argumentos.size() > 1)break;
-                list(directorioRemoto);
-                break;
-            case pwd:
-                printWD(directorioRemoto, true);
-                break;
-            case cd:
-                changeDirectori(directorioRemoto, argumentos[1]);
-                break;
-            case Mv:
-                mv(directorioRemoto,argumentos[1], argumentos[2]);
-                break;
-            case cp:
-                copy(directorioRemoto, argumentos[1], argumentos[2]);
-                break;
-            case Mkdir:
-                makeDir(directorioRemoto, argumentos[1]);
-                break;
-            case Touch:
-                touch(directorioRemoto, argumentos[1]);
-                break;
-            case rm:
-                //removeFich(directorioRemoto, argumentos[1], raid);
-                break;
-            case Rmdir:
-                removeDir(directorioRemoto, argumentos[1]);
-                break;
-            case lls:
-                localls();
-                break;
-            case lpwd:
-                localpwd();
-                break;
-            case lcd:
-                localcd(argumentos[1]);
-                break;
-            case Lupload:
-                lupload(directorioRemoto, argumentos[1]);
-                break;
-            case down:
-                download(directorioRemoto, argumentos[1]);
-                break;
-            case Exit:
-                // Enviamos codigo -1 a los esclavos.
-                int codigo = -1;
-              //  for(int i = 1; i < 5; i++)
-                  MPI_Send(&codigo,1,MPI_INT,1,0,MPI_COMM_WORLD);
-                std::cout << "Adiós\n";
-                directorioRemoto->guardarArbol(directorioRemoto->getRoot());
+  do{
+    printWD(directorioRemoto, false); std::cout << "> ";
+    std::cin.clear();
+    getline(std::cin, comando);
+    std::vector<std::string> argumentos = dividirArgumentos(comando);
+
+    try{
+      switch (com.at(argumentos[0])){
+        case ls:
+            list(directorioRemoto);
+            break;
+        case pwd:
+            printWD(directorioRemoto, true);
+            break;
+        case cd:
+            changeDirectori(directorioRemoto, argumentos[1]);
+            break;
+        case Mv:
+            mv(directorioRemoto,argumentos[1], argumentos[2]);
+            break;
+        case cp:
+            copy(directorioRemoto, argumentos[1], argumentos[2]);
+            break;
+        case Mkdir:
+            makeDir(directorioRemoto, argumentos[1]);
+            break;
+        case Touch:
+            touch(directorioRemoto, argumentos[1]);
+            break;
+        case rm:
+            //removeFich(directorioRemoto, argumentos[1], raid);
+            break;
+        case Rmdir:
+            removeDir(directorioRemoto, argumentos[1]);
+            break;
+        case lls:
+            localls();
+            break;
+        case lpwd:
+            localpwd();
+            break;
+        case lcd:
+            localcd(argumentos[1]);
+            break;
+        case Lupload:
+            lupload(directorioRemoto, argumentos[1]);
+            break;
+        case down:
+            download(directorioRemoto, argumentos[1]);
+            break;
+        case Exit:
+            // Enviamos codigo -1 a los esclavos.
+            int codigo = -1;
+            for(int i = 1; i < 5; i++)
+              MPI_Send(&codigo,1,MPI_INT,i,0,MPI_COMM_WORLD);
+            std::cout << "Adiós\n";
+            directorioRemoto->guardarArbol(directorioRemoto->getRoot());
           }
-      }catch(std::out_of_range e){
-        std::cout << "Error de sintaxis: " << argumentos[0] << "\n";
-      }
-      argumentos.clear();
-      }while(comando != "exit");
+    }catch(std::out_of_range e){
+      std::cout << "Error de sintaxis: " << argumentos[0] << "\n";
     }
+    argumentos.clear();
+  }while(comando != "exit");
+
 
   MPI_Finalize();
   delete directorioRemoto;

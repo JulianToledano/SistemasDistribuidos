@@ -1,6 +1,8 @@
+// Julián Toledano Díaz
+// Sistemas Distribuidos
+
 #include <mpi.h>
 #include "Raid.h"
-#include "iostream"
 #include <fstream>
 #include <stdlib.h>
 
@@ -17,7 +19,6 @@ int main(){
     MPI_Recv(&code,1,MPI_INT,0,0,MPI_COMM_WORLD, &status);
     // Código 0 enviar sector libre y refrescar sectoresLibres.dat
     if(code == 0){
-      //std::cout << "Codigo0";
       // Se envía el sector libre y se sobreescribe por 0 en sectoresLibres.dat
         int sector;
         std::fstream temp("temp.dat", std::ios::out | std::ios::binary);
@@ -40,16 +41,15 @@ int main(){
         remove("sectoresLibres.dat");
         rename("temp.dat","sectoresLibres.dat");
     }
-    // Codigo 1 write block
+    // Código 1 write block
     if(code == 1){
-      //std::cout << "Codigo1";
       int sector;
       MPI_Recv(&sector,1,MPI_INT,0,0,MPI_COMM_WORLD, &status);
-      //std::cout << "Sector: " << sector << "\n";
       char buffer[1025] = {};
       MPI_Recv(buffer,1025,MPI_CHAR,0,0,MPI_COMM_WORLD, &status);
       raid->writeBlock(sector, buffer);
     }
+    // código 2 readBlock
     if(code == 2){
       int sector;
       MPI_Recv(&sector,1,MPI_INT,0,0,MPI_COMM_WORLD, &status);

@@ -1,4 +1,5 @@
 // Julián Toledano Díaz
+// Sistemas Distribuidos
 
 #pragma once
 #include <string>
@@ -11,7 +12,7 @@ public:
   void format(int tamano);
   void writeBlock(int sector, char *bloque);
   void writeFile(std::string nombre, int *sectores, int size);
-  void readBlock(int bloque);
+  void readBlock(int sector);
   void readFile(std::string nombre, int *bloques, int size);
   void setSize(int msize);
   int getSize();

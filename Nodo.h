@@ -1,4 +1,5 @@
 // Julián Toledano Díaz
+// Sistemas Distribuidos
 
 #ifndef ARBOL_H
 #define ARBOL_H

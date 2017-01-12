@@ -1,4 +1,6 @@
 // Julián Toledano Díaz
+// Sistemas Distribuidos
+
 #include <mpi.h>
 #include "Raid.h"
 #include <fstream>
@@ -29,30 +31,28 @@ void Raid::writeBlock(int sector, char *bloque){
 }
 
 void Raid::writeFile(std::string nombre, int *sectores, int size){
-  std::cout << "Dentro write file. size: " << size;
   FILE *read = fopen(nombre.c_str(),"rb");
   int codigo = 1;
   for(int i = 0; i < size; i++){
     char buffer[1025] = {};
     int esclavo = i%4+1;
-    MPI_Send(&codigo,1,MPI_INT,1,0,MPI_COMM_WORLD); //*****
+    MPI_Send(&codigo,1,MPI_INT,esclavo,0,MPI_COMM_WORLD); //*****
     fseek(read, 1024*i, SEEK_SET);
     fread(buffer, 1, 1024, read);
     // Rellenamos de 0s si ocupa menos de 1024
     for(int j = 0; j < 1024; j++) if(buffer[j] == '\0')buffer[j] = '0';
-    MPI_Send(&sectores[i],1,MPI_INT,1,0,MPI_COMM_WORLD); //***
-    MPI_Send(buffer,1025,MPI_CHAR,1,0,MPI_COMM_WORLD); //*****
+    MPI_Send(&sectores[i],1,MPI_INT,esclavo,0,MPI_COMM_WORLD); //***
+    MPI_Send(buffer,1025,MPI_CHAR,esclavo,0,MPI_COMM_WORLD); //*****
   }
   fclose(read);
 }
 
-void Raid::readBlock(int bloque){
+void Raid::readBlock(int sector){
   std::ifstream file;
   file.open("disco.dat", std::ios::binary);
-  file.seekg(1024*(bloque-1));
+  file.seekg(1024*(sector-1));
   char buffer[1024] = {};
   file.read(buffer, sizeof(buffer));
-  std::cout << buffer;
   MPI_Send(buffer,1024,MPI_CHAR,0,0,MPI_COMM_WORLD);
   file.close();
 }
@@ -65,10 +65,10 @@ void Raid::readFile(std::string nombre, int *bloques, int size){
   for(int i = 0; i < size; i++){
     // Mandamos el codigo
     int esclavo = i%4+1;
-    MPI_Send(&codigo,1,MPI_INT,1,0,MPI_COMM_WORLD);//****
-    MPI_Send(&bloques[i],1,MPI_INT,1,0,MPI_COMM_WORLD);//*****
+    MPI_Send(&codigo,1,MPI_INT,esclavo,0,MPI_COMM_WORLD);//****
+    MPI_Send(&bloques[i],1,MPI_INT,esclavo,0,MPI_COMM_WORLD);//*****
     char buffer[1024] = {};
-    MPI_Recv(buffer,1024,MPI_CHAR,1,0,MPI_COMM_WORLD,&status);//******
+    MPI_Recv(buffer,1024,MPI_CHAR,esclavo,0,MPI_COMM_WORLD,&status);//******
     file << buffer;
   }
   file.close();

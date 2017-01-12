@@ -1,9 +1,12 @@
 // Julián Toledano Díaz
+// Sistemas Distribuidos
 
 #include "Nodo.h"
 #include <stdlib.h>
-
+// Por defecto no hace nada
 Nodo::Nodo(){}
+
+// Constructor root
 Nodo::Nodo(Arbol* arbol){
   esteArbol = arbol;
   padre = NULL;
@@ -18,6 +21,7 @@ Nodo::Nodo(Arbol* arbol){
   bloques = (int*)malloc(numBloques*sizeof(int));
 }
 
+// Constructor para nodos distintos de la raiz
 Nodo::Nodo(Arbol *arbol, Nodo* mpadre, char* mnombre, int mid, bool mdirectorio, off_t mtamano){
   esteArbol = arbol;
   padre = mpadre;
@@ -32,6 +36,7 @@ Nodo::Nodo(Arbol *arbol, Nodo* mpadre, char* mnombre, int mid, bool mdirectorio,
   bloques = (int*)malloc(numBloques*sizeof(int));
 }
 
+// Métodos GET
 Nodo* Nodo::getPadre(){return padre;}
 std::vector<Nodo*>* Nodo::getHijos(){return hijos;}
 char* Nodo::getNombre(){return nombre;}
@@ -43,6 +48,7 @@ time_t Nodo::getUltimaModificacion(){return ultimaModificacion;}
 int Nodo::getNumBloques(){return numBloques;}
 int* Nodo::getBloques() {return bloques;}
 
+// MÉTODOS SET
 void Nodo::setNombre(char* mnombre){strncpy(nombre, mnombre, MAX);}
 void Nodo::setId(int mid){id = mid;}
 void Nodo::setNivel(int mnivel){nivel = mnivel;}

@@ -1,4 +1,6 @@
 // Julián Toledano Díaz
+// Sistemas Distribuidos
+
 #ifndef NODO_H
 #define NODO_H
 
@@ -29,8 +31,7 @@ public:
   Nodo* getDirectorioActual();
   void setDirectorioActual(char* mnombre);
   void setDirectorioActual(Nodo* nodo);
-  // Usado únicamente en los tests
-  void imprimir(Nodo* nodo, int tab);
+  void imprimir(Nodo* nodo, int tab); // Usado únicamente en los tests
   void guardarArbol(Nodo* nodo);
   void cargarArbol(Nodo* nodo, int n);
   void recur(Nodo *nodo, int nivel);

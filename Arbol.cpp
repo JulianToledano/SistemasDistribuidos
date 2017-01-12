@@ -1,4 +1,5 @@
 // Julián Toledano Díaz
+// Sistemas Distribuidos
 #include "Arbol.h"
 #include <iostream>
 #include <fstream>
@@ -81,14 +82,11 @@ void Arbol::modificarNodo(Nodo *aModificar, char* mnombre, off_t mtamano){
 
 void Arbol::eliminarNodo(char* mnombre){
   Nodo* buscado = buscarNodo(directorioActual, mnombre);
-  //if(buscado->getHijos()->size() > 0) std::cout << "Contiene subdirectorios o ficheros, no se puede eliminar.\n";
-//  else{
     for(int i = 0; i < buscado->getPadre()->getHijos()->size(); i++){
       if(!strcmp(buscado->getPadre()->getHijos()->at(i)->getNombre(), mnombre)){
         buscado->getPadre()->getHijos()->erase(buscado->getPadre()->getHijos()->begin()+i);
         totalNodos -= 1;
       }
-    //}
   }
 }
 
