@@ -80,6 +80,31 @@ void uploadRecursivo(Arbol *arbol, char* path, char* directorio){
             // Insertamos los hijos de los hijos
             uploadRecursivo(arbol, pathCompleto, d->d_name);
           }
+          // En caso de ser un archivo
+          else{
+            char *file = (char*)malloc(1 +strlen(pathCompleto) + strlen(barra) + strlen(d->d_name));
+            strcat(file, pathCompleto);
+            strcat(file, barra);
+            strcat(file, d->d_name);
+            arbol->insertarNodo(d->d_name, false, tamano(pathCompleto, d->d_name));
+            for(int i = 0; i < arbol->getDirectorioActual()->getHijos()->size(); i++){
+              if(!strcmp(arbol->getDirectorioActual()->getHijos()->at(i)->getNombre(), d->d_name)){
+                float numBloques = st.st_size/1024;
+                if(numBloques-(int)numBloques == 0) numBloques += 1;
+                  for(int j = 0; j < numBloques; j++){
+                    // Se envia una peticion de bloques codigo 0
+                    int codigo = 0;
+                    MPI_Status status;
+                    int bloque;
+                    int esclavo = j%4+1;
+                    MPI_Send(&codigo,1,MPI_INT,1,0,MPI_COMM_WORLD); //i%4+1 //******
+                    MPI_Recv(&bloque,1,MPI_INT,1,0,MPI_COMM_WORLD,&status);//*********
+                    arbol->getDirectorioActual()->getHijos()->at(i)->anadirBloques(bloque);
+                  }// for j
+                  raid->writeFile(file, arbol->getDirectorioActual()->getHijos()->at(i)->getBloques(),arbol->getDirectorioActual()->getHijos()->at(i)->getNumBloques());
+              }// if strcmp
+            }// for
+          }
           // Devolvemos el nodo actual a su posición
           arbol->setDirectorioActual(temp);
         }
