@@ -47,11 +47,6 @@ void lupload(Arbol* arbol,std::string directorio){
   uploadRecursivo(arbol, cwd, dir);
 }
 
-// Comprueba si es un directoio o un archivo
-bool esDirectorio(char* path, char *nombre);
-// Devuelve el tamaño de un archivo o directorio
-off_t tamano(char* path, char *nombre);
-
 void uploadRecursivo(Arbol *arbol, char* path, char* directorio){
   Raid *raid = new Raid(false);
   char* barra = "/";
@@ -77,40 +72,7 @@ void uploadRecursivo(Arbol *arbol, char* path, char* directorio){
           Nodo* temp = arbol->getDirectorioActual();
           // Insertamos los hijos
           //En caso de ser un directorio
-          if(esDirectorio(pathCompleto,d->d_name)){
-            arbol->insertarNodo(d->d_name, true, tamano(pathCompleto,d->d_name));
-            // Insertamos los hijos de los hijos
-            uploadRecursivo(arbol, pathCompleto, d->d_name);
-          }
-          // En caso de ser un archivo
-          /*********************************
-          *   ERROR: segmentation fault    *
-          *            linea 108           *
-          *********************************/
-          else{
-            char *file = (char*)malloc(1 +strlen(pathCompleto) + strlen(barra) + strlen(d->d_name));
-            strcat(file, pathCompleto);
-            strcat(file, barra);
-            strcat(file, d->d_name);
-            arbol->insertarNodo(d->d_name, false, tamano(pathCompleto, d->d_name));
-            for(int i = 0; i < arbol->getDirectorioActual()->getHijos()->size(); i++){
-              if(!strcmp(arbol->getDirectorioActual()->getHijos()->at(i)->getNombre(), d->d_name)){
-                float numBloques = st.st_size/1024;
-                if(numBloques-(int)numBloques == 0) numBloques += 1;
-                  for(int j = 0; j < numBloques; j++){
-                    // Se envia una peticion de bloques codigo 0
-                    int codigo = 0;
-                    MPI_Status status;
-                    int bloque;
-                    int esclavo = j%4+1;
-                    MPI_Send(&codigo,1,MPI_INT,1,0,MPI_COMM_WORLD); //i%4+1 //******
-                    MPI_Recv(&bloque,1,MPI_INT,1,0,MPI_COMM_WORLD,&status);//*********
-                    arbol->getDirectorioActual()->getHijos()->at(i)->anadirBloques(bloque);
-                  }
-                  raid->writeFile(file, arbol->getDirectorioActual()->getHijos()->at(i)->getBloques(),arbol->getDirectorioActual()->getHijos()->at(i)->getNumBloques()); // ERROR
-              }
-            }
-          }
+          uploadRecursivo(arbol, pathCompleto, d->d_name);
           // Devolvemos el nodo actual a su posición
           arbol->setDirectorioActual(temp);
         }
@@ -142,30 +104,6 @@ void uploadRecursivo(Arbol *arbol, char* path, char* directorio){
       }
 
   }
-}
-off_t tamano(char* path, char *nombre){
-  char* barra = "/";
-  char* pathCompleto = (char*)malloc(1 + strlen(path) + strlen(barra) + strlen(nombre));
-  strcpy(pathCompleto, path);
-  strcat(pathCompleto, barra);
-  strcat(pathCompleto, nombre);
-  struct stat st;
-  if(stat(pathCompleto, &st) == 0)
-    return st.st_size;
-  return -1;
-}
-
-bool esDirectorio(char* path, char *nombre){
-  char* barra = "/";
-  char* pathCompleto = (char*)malloc(1 + strlen(path) + strlen(barra) + strlen(nombre));
-  strcpy(pathCompleto, path);
-  strcat(pathCompleto, barra);
-  strcat(pathCompleto, nombre);
-  struct stat st;
-  if(stat(pathCompleto, &st) == 0)
-    if(S_ISDIR(st.st_mode))
-      return true;
-  return -false;
 }
 
 void download(Arbol *arbol, std::string nombre){

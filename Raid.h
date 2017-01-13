@@ -3,7 +3,6 @@
 
 #pragma once
 #include <string>
-#include "Nodo.h"
 
 class Raid{
   int size;
